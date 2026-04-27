@@ -12,11 +12,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DossierMedical {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String diagnostic;
     private String observation;
     private LocalDate dateCreation;
 
+    @OneToOne
+    @JoinColumn(name = "patient_id", unique = true)
+    private Patient patient;
 }

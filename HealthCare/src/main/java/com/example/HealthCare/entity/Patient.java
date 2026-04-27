@@ -25,8 +25,7 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private List<RendezVous> listeRendezVous;
 
-    @OneToOne
-    @JoinColumn(name = "dossier_id")
+    @OneToOne(mappedBy = "patient")
     private DossierMedical dossierMedical;
 
 }

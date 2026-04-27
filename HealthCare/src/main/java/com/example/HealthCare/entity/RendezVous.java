@@ -27,4 +27,5 @@ public class RendezVous {
     @ManyToOne
     @JoinColumn(name = "medecin_id")
     private Medecin medecin;
+
 }
