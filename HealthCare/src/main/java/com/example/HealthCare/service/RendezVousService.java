@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RendezVousService {
@@ -45,6 +46,7 @@ public class RendezVousService {
         return rendezVousMapper.toDto(saveRendezVous);
     }
 
+    @Transactional
     public RendezVousResponseDTO updateRendezVous(Long id, RendezVouRequestDTO requestDTO){
         RendezVous rendezVous =rendezVousRepo.findById(id).orElseThrow(()->new RuntimeException("RendezVous Not Found"));
        Patient patient= patientRepo.findById(requestDTO.getPatientId()).orElseThrow(()->new RuntimeException("Patient Not Found"));
@@ -58,4 +60,28 @@ public class RendezVousService {
         return rendezVousMapper.toDto(updateRendez);
     }
 
+    @Transactional
+    public List<RendezVousResponseDTO> getAllRendezVous(){
+      List<RendezVous> rendezVousList=rendezVousRepo.findAll();
+      return  rendezVousMapper.toDto(rendezVousList);
+    }
+    @Transactional
+    public List<RendezVousResponseDTO> rechercheRendezVousPatient(Long patientId){
+        List<RendezVous>listOfPatient=rendezVousRepo.findByPatientId(patientId);
+        return rendezVousMapper.toDto(listOfPatient);
+    }
+
+    @Transactional
+    public List<RendezVousResponseDTO> rechercheRendezVousMedecin(Long medecinId){
+        List<RendezVous> listOfMedecin=rendezVousRepo.findByMedecinId(medecinId);
+        return rendezVousMapper.toDto(listOfMedecin);
+    }
+
+    @Transactional
+    public RendezVousResponseDTO annulerRendezVous(Long id){
+        RendezVous rendezVous= rendezVousRepo.findById(id).orElseThrow(()->new RuntimeException("RendezVous Not Found"));
+        rendezVous.setStatut(StatutRendezVous.ANNULE);
+        rendezVousRepo.save(rendezVous);;
+        return rendezVousMapper.toDto(rendezVous);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.mapper.PatientMapper;
 import com.example.HealthCare.repository.PatientRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class PatientService {
         this.patientMapper = patientMapper;
     }
 
+    @Transactional
     public PatientResponseDTO addPatient(PatientRequestDTO patientDTO) {
         if(patientRepo.existsByEmail(patientDTO.getEmail())){
            throw  new RuntimeException("Email already exist");
@@ -27,21 +29,25 @@ public class PatientService {
         return patientMapper.toDto(savedPatient);
     }
 
+    @Transactional
     public PatientResponseDTO updatePateint(Long id,PatientRequestDTO patient){
         Patient  findPatient=patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         patientMapper.updatePatient(patient,findPatient);
         Patient patientUpdated=patientRepo.save(findPatient);
         return patientMapper.toDto(patientUpdated);
     }
+    @Transactional
     public void deletePatient(Long id){
         patientRepo.deleteById(id);
     }
 
+    @Transactional
     public List<PatientResponseDTO> getAllPatient(){
         List<Patient> patientList =patientRepo.findAll();
         return patientMapper.toDto(patientList);
     }
 
+    @Transactional
     public  PatientResponseDTO  getPatientById(Long id){
         Patient patient= patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         return patientMapper.toDto(patient);
