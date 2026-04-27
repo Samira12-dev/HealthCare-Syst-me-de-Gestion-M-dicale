@@ -23,7 +23,7 @@ public class Patient {
     private LocalDate dateNaissance;
 
     @OneToMany(mappedBy = "patient")
-    private List<RendezVous> listeRenderVous;
+    private List<RendezVous> listeRendezVous;
 
     @OneToOne
     @JoinColumn(name = "dossier_id")
