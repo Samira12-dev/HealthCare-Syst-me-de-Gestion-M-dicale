@@ -30,11 +30,10 @@ public class PatientService {
     }
 
     @Transactional
-    public PatientResponseDTO updatePateint(Long id,PatientRequestDTO patient){
-        Patient  findPatient=patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
-        patientMapper.updatePatient(patient,findPatient);
-        Patient patientUpdated=patientRepo.save(findPatient);
-        return patientMapper.toDto(patientUpdated);
+    public PatientResponseDTO updatePatient(Long id, PatientRequestDTO dto) {
+        Patient patient = patientRepo.findById(id).orElseThrow(() -> new RuntimeException("not found"));
+        patientMapper.updatePatient(dto, patient);
+        return patientMapper.toDto(patient);
     }
     @Transactional
     public void deletePatient(Long id){

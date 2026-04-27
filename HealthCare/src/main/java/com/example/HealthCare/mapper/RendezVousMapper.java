@@ -4,6 +4,7 @@ import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.RendezVous;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RendezVousMapper {
 
+    @Mapping(source = "patient.id", target = "patientId")
+    @Mapping(source = "medecin.id", target = "medecinId")
     RendezVousResponseDTO toDto(RendezVous rendezVous);
     List<RendezVousResponseDTO>toDto(List<RendezVous>rendezVousList);
     RendezVous toEntity(RendezVouRequestDTO rendezVousRequestDTO);

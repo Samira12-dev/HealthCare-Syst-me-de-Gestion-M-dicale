@@ -15,10 +15,6 @@ import java.time.LocalDateTime;
 public class RendezVouRequestDTO {
     @NotNull(message = "La date de rendez_vous est obligatoire")
     private LocalDateTime dateRendezVous;
-
-    @NotNull(message = "Le statut est obligatoire")
-    private StatutRendezVous statut;
-
     @NotNull(message = "L'id du patient est obligatoire")
     private Long patientId;
 

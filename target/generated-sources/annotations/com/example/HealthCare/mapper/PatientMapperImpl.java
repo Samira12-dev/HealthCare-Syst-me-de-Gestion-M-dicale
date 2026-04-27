@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-27T12:11:38+0100",
+    date = "2026-04-27T17:49:49+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -28,9 +28,7 @@ public class PatientMapperImpl implements PatientMapper {
         patientResponseDTO.setNom( patient.getNom() );
         patientResponseDTO.setPrenom( patient.getPrenom() );
         patientResponseDTO.setEmail( patient.getEmail() );
-        if ( patient.getTelephone() != null ) {
-            patientResponseDTO.setTelephone( Integer.parseInt( patient.getTelephone() ) );
-        }
+        patientResponseDTO.setTelephone( patient.getTelephone() );
         patientResponseDTO.setDateNaissance( patient.getDateNaissance() );
 
         return patientResponseDTO;
@@ -61,7 +59,7 @@ public class PatientMapperImpl implements PatientMapper {
         patient.setNom( patientRequestDTO.getNom() );
         patient.setPrenom( patientRequestDTO.getPrenom() );
         patient.setEmail( patientRequestDTO.getEmail() );
-        patient.setTelephone( String.valueOf( patientRequestDTO.getTelephone() ) );
+        patient.setTelephone( patientRequestDTO.getTelephone() );
         patient.setDateNaissance( patientRequestDTO.getDateNaissance() );
 
         return patient;
@@ -76,7 +74,7 @@ public class PatientMapperImpl implements PatientMapper {
         patient.setNom( patientRequestDTO.getNom() );
         patient.setPrenom( patientRequestDTO.getPrenom() );
         patient.setEmail( patientRequestDTO.getEmail() );
-        patient.setTelephone( String.valueOf( patientRequestDTO.getTelephone() ) );
+        patient.setTelephone( patientRequestDTO.getTelephone() );
         patient.setDateNaissance( patientRequestDTO.getDateNaissance() );
     }
 }

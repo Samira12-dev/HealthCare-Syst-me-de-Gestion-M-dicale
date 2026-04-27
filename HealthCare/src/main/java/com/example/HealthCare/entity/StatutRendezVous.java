@@ -1,7 +1,7 @@
 package com.example.HealthCare.entity;
 
 public enum StatutRendezVous {
-    EN_ATTENTE,
+    PLANIFIE,
     CONFIRME,
     ANNULE,
     TERMINE

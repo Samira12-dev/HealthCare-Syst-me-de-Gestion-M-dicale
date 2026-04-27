@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/patients")
+@RequestMapping("/api/patients")
 @RequiredArgsConstructor
 public class PatientController {
     private  final PatientService patientService;
@@ -20,12 +20,12 @@ public class PatientController {
     public PatientResponseDTO addPatient(@Valid @RequestBody PatientRequestDTO patientdto){
         return  patientService.addPatient(patientdto);
     }
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public PatientResponseDTO updatePatient(@PathVariable Long id, @Valid @RequestBody PatientRequestDTO patientdto){
-        return patientService.updatePateint(id, patientdto);
+        return patientService.updatePatient(id, patientdto);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable Long id){
         patientService.deletePatient(id);
     }
@@ -33,7 +33,7 @@ public class PatientController {
     public List<PatientResponseDTO>getAllPatientss(){
         return  patientService.getAllPatient();
     }
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public PatientResponseDTO getPatientById(@PathVariable Long id){
         return patientService.getPatientById(id);
     }

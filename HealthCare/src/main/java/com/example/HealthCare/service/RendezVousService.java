@@ -40,7 +40,7 @@ public class RendezVousService {
             Medecin medecin= medecinRepo.findById(rendezVouRequestDTO.getMedecinId()).orElseThrow(()->new RuntimeException("Medecin Not Found"));
             createRendezVous.setMedecin(medecin);
         if(createRendezVous.getStatut()==null){
-            createRendezVous.setStatut(StatutRendezVous.EN_ATTENTE);
+            createRendezVous.setStatut(StatutRendezVous.PLANIFIE);
         }
         RendezVous saveRendezVous= rendezVousRepo.save(createRendezVous);
         return rendezVousMapper.toDto(saveRendezVous);
