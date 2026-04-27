@@ -7,6 +7,8 @@ import com.example.HealthCare.mapper.PatientMapper;
 import com.example.HealthCare.repository.PatientRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PatientService {
     private final PatientRepo  patientRepo;
@@ -25,4 +27,24 @@ public class PatientService {
         return patientMapper.toDto(savedPatient);
     }
 
+    public PatientResponseDTO updatePateint(Long id,PatientRequestDTO patient){
+        Patient  findPatient=patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
+        patientMapper.updatePatient(patient,findPatient);
+        Patient patientUpdated=patientRepo.save(findPatient);
+        return patientMapper.toDto(patientUpdated);
+    }
+    public void deletePatient(Long id){
+        patientRepo.deleteById(id);
+    }
+
+    public List<PatientResponseDTO> getAllPatient(){
+        List<Patient> patientList =patientRepo.findAll();
+        return patientMapper.toDto(patientList);
+    }
+
+    public  PatientResponseDTO  getPatientById(Long id){
+        Patient patient= patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
+        return patientMapper.toDto(patient);
+    }
 }
+
