@@ -3,6 +3,7 @@ package com.example.HealthCare.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,6 @@ public class PatientRequestDTO {
     @NotBlank(message = "Le telephone est obligatoire")
     private String telephone;
     @NotNull(message = "La date naissance est obligatoire")
+    @Past(message = "La date doit être passe")
     private LocalDate dateNaissance;
 }
