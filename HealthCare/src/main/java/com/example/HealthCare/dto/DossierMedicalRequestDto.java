@@ -15,7 +15,6 @@ import java.time.LocalDate;
 public class DossierMedicalRequestDto {
 
     private String diagnostic;
-
     private String observation;
     @NotNull(message = "La date creation  est obligatoire")
     @FutureOrPresent(message = "La date doit être présente ou future")

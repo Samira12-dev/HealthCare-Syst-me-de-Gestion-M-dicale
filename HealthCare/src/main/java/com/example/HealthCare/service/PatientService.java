@@ -51,5 +51,6 @@ public class PatientService {
         Patient patient= patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         return patientMapper.toDto(patient);
     }
+
 }
 
