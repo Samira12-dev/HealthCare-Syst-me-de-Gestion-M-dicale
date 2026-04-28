@@ -75,29 +75,29 @@ src/
 ##  les trois diagrammes UM
 
 # Diagramme de Classes
-![img_2.png](img_2.png)
+![img_2.png](HealthCare/img_2.png)
 
 # Diagramme de Cas d'Utilisation
-![img_3.png](img_3.png)
+![img_3.png](HealthCare/img_3.png)
 
 # Diagramme de Séquence
 
 - exapmle pour ajouter 
 
-![img_4.png](img_4.png)
+![img_4.png](HealthCare/img_4.png)
 
 
 - example pour lister medecins
 
-![img_5.png](img_5.png)
+![img_5.png](HealthCare/img_5.png)
 
 - example pour supprimer 
 
-![img_6.png](img_6.png)
+![img_6.png](HealthCare/img_6.png)
 
 - exemple recherche rendez_vous par patient
 
-![img_7.png](img_7.png)
+![img_7.png](HealthCare/img_7.png)
 
 
 
