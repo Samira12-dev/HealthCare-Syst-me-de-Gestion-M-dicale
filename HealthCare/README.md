@@ -3,22 +3,49 @@
 ## Description
 Le Système de Gestion Médicale est une application web développée avec Spring Boot.
 
-Elle permet de :
+Elle permet de gérer :
 
-# Gestion des Patients
-# Gestion des Médecins
-# Gestion des Rendez-vous
-# Gestion Dossier Médical
+- Les patients
+- Les médecins
+- Les rendez-vous
+- Les dossiers medical
+
 
 
 
 ## Fonctionnalités
-- Créer, modifier, supprimer ,lister et consulter les patients
-- Créer, modifier, supprimer et consulter les medecins
-- Gérer les dossiers medical pour patient (créé dossier medical, ajouter diagnostic,ajouter observation avec date de création)
-- Gérer les rendez-vous entre patients et médecins
-- API REST documentée avec Swagger
-- creation database avec migration
+
+# Gestion des Patients
+
+Ajouter patient
+Modifier patient
+Supprimer patient
+Lister patients
+Consulter patient
+
+# Gestion des Médecins
+
+Ajouter médecin
+Modifier médecin
+Supprimer médecin
+Lister médecins
+
+# Gestion des Rendez-vous
+
+Créer rendez-vous
+Modifier rendez-vous
+Annuler rendez-vous
+Lister rendez-vous
+Rechercher par patient
+Rechercher par médecin
+
+# Gestion Dossier Médical
+
+Créer dossier médical
+Ajouter diagnostic
+Ajouter observations
+Consulter dossier médical
+
 
 ## Technologies Utilisées
 - Java 17 / 21
