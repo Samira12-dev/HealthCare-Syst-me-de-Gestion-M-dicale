@@ -19,20 +19,21 @@ public class DossierMedicalContoller {
     public DossierMedicalResponseDto createDossier(@Valid @RequestBody DossierMedicalRequestDto requestDto){
         return dossierMedicalService.createDossier(requestDto);
     }
-    @PutMapping("/api/dossier/{id}/diagnostic")
+    @PutMapping("/{id}/diagnostic")
     @Operation(summary = "Ajouter diagnostic")
-    public  DossierMedicalResponseDto addDiagnostic(@Valid @RequestBody String diagnostic){
-        return dossierMedicalService.ajouterDiagnostic(diagnostic);
+    public  DossierMedicalResponseDto addDiagnostic(@PathVariable Long id,@Valid @RequestBody String diagnostic){
+
+        return dossierMedicalService.ajouterDiagnostic(id,diagnostic);
     }
 
-    @PutMapping("/api/dossier/{id}/observation")
+    @PutMapping("/{id}/observation")
     @Operation(summary = "Ajouter observation")
-    public  DossierMedicalResponseDto addObservation(@Valid @RequestBody String observation){
-        return dossierMedicalService.ajouterObeservation(observation);
+    public  DossierMedicalResponseDto addObservation(@PathVariable Long id,@Valid @RequestBody String observation){
+        return dossierMedicalService.ajouterObeservation(id,observation);
     }
-    @GetMapping("/dossier/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Consulter dossier")
-    public DossierMedicalResponseDto getDossierMedicalById(@PathVariable Long id , @Valid @RequestBody DossierMedicalRequestDto requestDto){
+    public DossierMedicalResponseDto getDossierMedicalById(@PathVariable Long id ){
         return dossierMedicalService.findDossierMedicalById(id);
     }
 }

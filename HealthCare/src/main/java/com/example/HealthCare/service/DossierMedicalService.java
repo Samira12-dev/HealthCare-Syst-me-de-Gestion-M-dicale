@@ -36,15 +36,20 @@ public class DossierMedicalService {
     }
 
     @Transactional
-    public DossierMedicalResponseDto ajouterDiagnostic(String diagnostic) {
-        DossierMedical addingdiagnostic= dossierMedicalRepo.findByDiagnostic(diagnostic);
-        return  dossierMedicalMapper.toDto(addingdiagnostic);
+    public DossierMedicalResponseDto ajouterDiagnostic(Long patientid,String diagnostic) {
+        DossierMedical dossier = dossierMedicalRepo.findById(patientid)
+                .orElseThrow(() -> new RuntimeException("Dossier not found"));
+        dossier.setDiagnostic(diagnostic);
+        dossierMedicalRepo.save(dossier);
+        return dossierMedicalMapper.toDto(dossier);
     }
 
     @Transactional
-    public DossierMedicalResponseDto ajouterObeservation(String observation) {
-        DossierMedical addObservation= dossierMedicalRepo.findByObservation(observation);
-        return dossierMedicalMapper.toDto(addObservation);
+    public DossierMedicalResponseDto ajouterObeservation(Long patientId,String observation) {
+        DossierMedical dossierMedical=dossierMedicalRepo.findById(patientId).orElseThrow(()->new RuntimeException("Dossier not found"));
+        dossierMedical.setObservation(observation);
+        dossierMedicalRepo.save(dossierMedical);
+        return dossierMedicalMapper.toDto(dossierMedical);
     }
 
     @Transactional
