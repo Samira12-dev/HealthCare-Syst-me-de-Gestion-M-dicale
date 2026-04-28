@@ -21,7 +21,7 @@ public class RendezVousContoller {
     public RendezVousResponseDTO createRendezVous(@Valid @RequestBody RendezVouRequestDTO requestDTO){
         return  rendezVousService.createRendezVous(requestDTO);
     }
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public RendezVousResponseDTO updaterendezVous(@PathVariable Long id, @Valid @RequestBody RendezVouRequestDTO requestDTO){
         return rendezVousService.updateRendezVous(id, requestDTO);
     }
