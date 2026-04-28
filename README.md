@@ -78,7 +78,7 @@ src/
 ![img_2.png](HealthCare/img_2.png)
 
 # Diagramme de Cas d'Utilisation
-![img_3.png](HealthCare/img_3.png)
+![img_1.png](img_1.png)
 
 # Diagramme de Séquence
 
