@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -40,6 +41,7 @@ class RendezVousServiceTest {
 
     private  Patient patientTest;
     private Medecin medecinTest;
+    private RendezVousResponseDTO rendezVousCreated;
 
     @BeforeEach
     void  setup(){
@@ -58,6 +60,11 @@ class RendezVousServiceTest {
         medecin.setTelephone("98765432");
         medecinTest= medecinRepo.save(medecin);
 
+        RendezVouRequestDTO requestDTO = new RendezVouRequestDTO();
+        requestDTO.setPatientId(patientTest.getId());
+        requestDTO.setMedecinId(medecinTest.getId());
+
+        rendezVousCreated = service.createRendezVous(requestDTO);
     }
 
     @Test
@@ -77,17 +84,13 @@ class RendezVousServiceTest {
 
     @Test
     void modifierRendezVousTest(){
-        RendezVouRequestDTO requestDTO=new RendezVouRequestDTO();
-        requestDTO.setPatientId(patientTest.getId());
-        requestDTO.setMedecinId(medecinTest.getId());
 
-        RendezVousResponseDTO created= service.createRendezVous(requestDTO);
         RendezVouRequestDTO updated= new RendezVouRequestDTO();
         updated.setPatientId(patientTest.getId());
         updated.setMedecinId(medecinTest.getId());
 
         updated.setStatut(StatutRendezVous.CONFIRME);
-        RendezVousResponseDTO responseDT= service.updateRendezVous(created.getId(),updated);
+        RendezVousResponseDTO responseDT= service.updateRendezVous(rendezVousCreated.getId(),updated);
 
         assertNotNull(responseDT);
         assertEquals(StatutRendezVous.CONFIRME,responseDT.getStatut());
@@ -97,14 +100,57 @@ class RendezVousServiceTest {
     @Test
     void annulerRendez_vousTest(){
 
-        RendezVouRequestDTO updated= new RendezVouRequestDTO();
-        updated.setStatut(StatutRendezVous.CONFIRME);
-
-
-        assertNotNull(updated);
-        assertEquals(StatutRendezVous.CONFIRME,updated.getStatut());
+        RendezVousResponseDTO responseDTO=service.annulerRendezVous(rendezVousCreated.getId());
+        assertNotNull(responseDTO);
+        assertEquals(StatutRendezVous.ANNULE,responseDTO.getStatut());
     }
 
+    @Test
+    void  listerRendezVous(){
+
+        List<RendezVousResponseDTO>list=service.getAllRendezVous();
+        assertNotNull(list);
+        assertEquals(17,list.size());
+    }
+
+    @Test
+    void rechercheRendezVousPatientTest() {
+
+        RendezVouRequestDTO r1 = new RendezVouRequestDTO();
+        r1.setPatientId(patientTest.getId());
+        r1.setMedecinId(medecinTest.getId());
+        service.createRendezVous(r1);
+
+        RendezVouRequestDTO r2 = new RendezVouRequestDTO();
+        r2.setPatientId(patientTest.getId());
+        r2.setMedecinId(medecinTest.getId());
+        service.createRendezVous(r2);
+
+        List<RendezVousResponseDTO> result =
+                service.rechercheRendezVousPatient(patientTest.getId());
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void rechercheRendezVousMedecinTest() {
+        RendezVouRequestDTO r1 = new RendezVouRequestDTO();
+        r1.setPatientId(patientTest.getId());
+        r1.setMedecinId(medecinTest.getId());
+        service.createRendezVous(r1);
+
+        RendezVouRequestDTO r2 = new RendezVouRequestDTO();
+        r2.setPatientId(patientTest.getId());
+        r2.setMedecinId(medecinTest.getId());
+        service.createRendezVous(r2);
 
 
+        List<RendezVousResponseDTO> result =
+                service.rechercheRendezVousMedecin(medecinTest.getId());
+
+        assertNotNull(result);
+
+        assertEquals(3,result.size());
+    }
 }
