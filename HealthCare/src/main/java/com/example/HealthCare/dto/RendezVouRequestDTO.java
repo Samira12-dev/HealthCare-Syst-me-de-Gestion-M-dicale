@@ -1,6 +1,7 @@
 package com.example.HealthCare.dto;
 
 
+import com.example.HealthCare.entity.RendezVous;
 import com.example.HealthCare.entity.StatutRendezVous;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -22,4 +23,6 @@ public class RendezVouRequestDTO {
 
     @NotNull(message = "L'id du médecin est obligatoire")
     private Long medecinId;
+
+    private StatutRendezVous statut= StatutRendezVous.PLANIFIE;
 }

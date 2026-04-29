@@ -1,4 +1,4 @@
-#HealthCare+ : Système de Gestion Médicale
+# HealthCare+ : Système de Gestion Médicale
 
 ## Description
 Le Système de Gestion Médicale est une application web développée avec Spring Boot.

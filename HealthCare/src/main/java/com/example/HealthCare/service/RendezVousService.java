@@ -52,8 +52,10 @@ public class RendezVousService {
        Patient patient= patientRepo.findById(requestDTO.getPatientId()).orElseThrow(()->new RuntimeException("Patient Not Found"));
        Medecin medecin= medecinRepo.findById(requestDTO.getMedecinId()).orElseThrow(()->new RuntimeException("Medecin Not Found"));
         rendezVous.setDateRendezVous(requestDTO.getDateRendezVous());
-        rendezVous.setStatut(StatutRendezVous.CONFIRME);
 
+        if(requestDTO.getStatut()!=null){
+            rendezVous.setStatut(requestDTO.getStatut());
+        }
         rendezVous.setPatient(patient);
         rendezVous.setMedecin(medecin);
         RendezVous updateRendez= rendezVousRepo.save(rendezVous);
