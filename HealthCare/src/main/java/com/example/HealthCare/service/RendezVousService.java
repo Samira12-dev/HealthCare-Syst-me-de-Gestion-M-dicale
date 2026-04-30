@@ -51,11 +51,13 @@ public class RendezVousService {
         RendezVous rendezVous =rendezVousRepo.findById(id).orElseThrow(()->new RuntimeException("RendezVous Not Found"));
        Patient patient= patientRepo.findById(requestDTO.getPatientId()).orElseThrow(()->new RuntimeException("Patient Not Found"));
        Medecin medecin= medecinRepo.findById(requestDTO.getMedecinId()).orElseThrow(()->new RuntimeException("Medecin Not Found"));
-        rendezVous.setDateRendezVous(requestDTO.getDateRendezVous());
 
-        if(requestDTO.getStatut()!=null){
-            rendezVous.setStatut(requestDTO.getStatut());
-        }
+//        rendezVous.setDateRendezVous(requestDTO.getDateRendezVous());
+//
+//        if(requestDTO.getStatut()!=null){
+//            rendezVous.setStatut(requestDTO.getStatut());
+//        }
+        rendezVousMapper.update(requestDTO,rendezVous);
         rendezVous.setPatient(patient);
         rendezVous.setMedecin(medecin);
         RendezVous updateRendez= rendezVousRepo.save(rendezVous);

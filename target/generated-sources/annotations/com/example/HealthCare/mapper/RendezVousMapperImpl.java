@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-27T17:58:13+0100",
+    date = "2026-04-30T10:24:23+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -58,6 +58,7 @@ public class RendezVousMapperImpl implements RendezVousMapper {
         RendezVous rendezVous = new RendezVous();
 
         rendezVous.setDateRendezVous( rendezVousRequestDTO.getDateRendezVous() );
+        rendezVous.setStatut( rendezVousRequestDTO.getStatut() );
 
         return rendezVous;
     }
@@ -69,6 +70,7 @@ public class RendezVousMapperImpl implements RendezVousMapper {
         }
 
         rendezVous.setDateRendezVous( requestDTO.getDateRendezVous() );
+        rendezVous.setStatut( requestDTO.getStatut() );
     }
 
     private Long rendezVousPatientId(RendezVous rendezVous) {
