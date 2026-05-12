@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -52,5 +53,8 @@ public class RendezVousContoller {
     public List<RendezVousResponseDTO> getRendezVousByMedecin(@PathVariable Long medecinId){
         return rendezVousService.rechercheRendezVousMedecin(medecinId);
     }
+
+
+
 }
 

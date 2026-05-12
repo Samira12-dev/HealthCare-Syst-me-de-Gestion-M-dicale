@@ -13,6 +13,7 @@ import com.example.HealthCare.repository.RendezVousRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -88,4 +89,13 @@ public class RendezVousService {
         rendezVousRepo.save(rendezVous);;
         return rendezVousMapper.toDto(rendezVous);
     }
+
+    @Transactional
+    public List<RendezVousResponseDTO> getRendezVousByStatu( Long medecin_id,String statut){
+        Medecin medecin =medecinRepo.findById(medecin_id).orElseThrow(()->new RuntimeException("not found"));
+        List<RendezVous> list= rendezVousRepo.findByStatut(statut);
+        list.stream().filter(m->m.getMedecin().equals(medecin_id)).toList();
+        return rendezVousMapper.toDto(list);
+    }
+
 }
