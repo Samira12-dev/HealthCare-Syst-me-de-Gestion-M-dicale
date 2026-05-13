@@ -39,7 +39,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDto dto) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto dto) {
 
         if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists");
@@ -48,13 +48,19 @@ public class AuthController {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-
-        // ✅ FIX: only once
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        userRepo.save(user);
+        User savedUser = userRepo.save(user);
 
-        return ResponseEntity.ok("User registered successfully");
+        String token = jwtUtils.generateToken(savedUser.getEmail());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("type", "Bearer");
+        response.put("email", savedUser.getEmail());
+        response.put("username", savedUser.getUsername());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")

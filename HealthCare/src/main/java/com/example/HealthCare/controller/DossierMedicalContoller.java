@@ -4,10 +4,12 @@ import com.example.HealthCare.dto.DossierMedicalRequestDto;
 import com.example.HealthCare.dto.DossierMedicalResponseDto;
 import com.example.HealthCare.service.DossierMedicalService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
+@SecurityRequirement(name ="bearerAuth")
 @RestController
 @RequestMapping("/api/dossier")
 @RequiredArgsConstructor
