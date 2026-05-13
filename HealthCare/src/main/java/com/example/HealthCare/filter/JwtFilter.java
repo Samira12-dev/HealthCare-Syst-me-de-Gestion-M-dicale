@@ -23,26 +23,69 @@ public class JwtFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtils jwtUtils;
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final  String authHeader =request.getHeader("Authorization");
-        String username= null;
-        String  jwt= null;
-        if(authHeader!=null && authHeader.startsWith("Bearer ")){
-            jwt = authHeader.substring(7);
-            username = jwtUtils.extractUsername(jwt);
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // ✅ IGNORE SWAGGER + API DOCS
+        if (path.contains("/swagger-ui") ||
+                path.contains("/api-docs")||
+                path.contains("/v3/api-docs") ||
+                path.contains("/swagger-resources") ||
+                path.contains("/webjars")) {
+
+            filterChain.doFilter(request, response);
+            return;
         }
-        if(username != null && SecurityContextHolder.getContext().getAuthentication()== null){
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            if (jwtUtils.validateToken(jwt, userDetails)){
-                UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        final String authHeader = request.getHeader("Authorization");
+
+        String username = null;
+        String jwt = null;
+
+        // ❌ No token → continue
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        jwt = authHeader.substring(7);
+
+        try {
+            username = jwtUtils.extractUsername(jwt);
+        } catch (Exception e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (username != null &&
+                SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails =
+                    customUserDetailsService.loadUserByUsername(username);
+
+            if (jwtUtils.validateToken(jwt, userDetails)) {
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
-
     }
-
 }

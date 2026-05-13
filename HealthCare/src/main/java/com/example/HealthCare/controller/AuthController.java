@@ -5,17 +5,31 @@ import com.example.HealthCare.dto.LoginRequestDto;
 import com.example.HealthCare.dto.RegisterRequestDto;
 import com.example.HealthCare.entity.User;
 import com.example.HealthCare.repository.UserRepo;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -24,39 +38,55 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-
-    @GetMapping("/test")
-    public String test(){
-        return "OK";
-    }
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto requestDto){
-        if(userRepo.findByEmail(requestDto.getEmail()).isPresent()){
-//            throw  new RuntimeException("Email already exists");
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDto dto) {
+
+        if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
+
         User user = new User();
-        user.setUserName(requestDto.getUserName());
-        user.setEmail(requestDto.getEmail());
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-       return ResponseEntity.ok(userRepo.save(user));
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+
+        // ✅ FIX: only once
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        userRepo.save(user);
+
+        return ResponseEntity.ok("User registered successfully");
     }
 
-@PostMapping("/login")
-public String login(@RequestBody LoginRequestDto requestDto){
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto dto) {
 
-    authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    requestDto.getEmail(),
-                    requestDto.getPassword()
-            )
-    );
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            dto.getEmail(),
+                            dto.getPassword()
+                    )
+            );
 
-    User user = userRepo.findByEmail(requestDto.getEmail())
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+            if (auth.isAuthenticated()) {
 
-    return jwtUtils.generateToken(user.getEmail());
-}
+                User user = userRepo.findByEmail(dto.getEmail())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
 
+                String token = jwtUtils.generateToken(user.getEmail());
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("token", token);
+                response.put("type", "Bearer");
+                response.put("email", user.getEmail());
+
+                return ResponseEntity.ok(response);
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login");
+
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login");
+        }
+    }
 }

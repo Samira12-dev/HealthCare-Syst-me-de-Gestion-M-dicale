@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -18,11 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepo userRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(username).orElseThrow(()->new RuntimeException("user not found"));
-        if(user == null){
-            throw  new UsernameNotFoundException(" User not found with username"+ username);
-        }
-        return new  org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(), Collections.singleton(new SimpleGrantedAuthority("User")));
+    public UserDetails loadUserByUsername(String email) {
+
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User
+                .builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_USER") // ✅ important fix
+                .build();
     }
 }
