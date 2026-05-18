@@ -3,6 +3,7 @@ package com.example.HealthCare.controller;
 import com.example.HealthCare.config.JwtUtils;
 import com.example.HealthCare.dto.LoginRequestDto;
 import com.example.HealthCare.dto.RegisterRequestDto;
+import com.example.HealthCare.entity.Role;
 import com.example.HealthCare.entity.User;
 import com.example.HealthCare.repository.UserRepo;
 
@@ -49,10 +50,11 @@ public class AuthController {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(dto.getRole()!= null ? dto.getRole() : Role.PATIENT);
 
         User savedUser = userRepo.save(user);
 
-        String token = jwtUtils.generateToken(savedUser.getEmail());
+        String token = jwtUtils.generateToken(savedUser.getEmail(), savedUser.getRole().name());
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
@@ -79,13 +81,13 @@ public class AuthController {
                 User user = userRepo.findByEmail(dto.getEmail())
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
-                String token = jwtUtils.generateToken(user.getEmail());
+                String token = jwtUtils.generateToken(user.getEmail(), user.getRole().name());
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", token);
                 response.put("type", "Bearer");
                 response.put("email", user.getEmail());
-
+                response.put("role", user.getRole());
                 return ResponseEntity.ok(response);
             }
 

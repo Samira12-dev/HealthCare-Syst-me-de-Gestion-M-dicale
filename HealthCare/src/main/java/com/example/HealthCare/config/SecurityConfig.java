@@ -5,6 +5,7 @@ import com.example.HealthCare.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -66,6 +67,40 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
+
+                        //admin
+                        .requestMatchers(HttpMethod.GET,    "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
+
+                        //medecin & admin
+                        .requestMatchers(HttpMethod.GET, "/api/medecin/**").hasAnyRole("MEDECIN","ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/medecin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/medecin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/medecin/**").hasRole("ADMIN")
+
+                        //patient
+                        .requestMatchers(HttpMethod.GET,    "/api/patient/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/patient/me").hasRole("PATIENT")
+                        .requestMatchers(HttpMethod.GET,    "/api/patient/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/patient/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/patient/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/patient/**").hasRole("ADMIN")
+
+                        //rendez_vous
+                        .requestMatchers(HttpMethod.GET,    "/api/rendezVous/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/rendezVous/**").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,    "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
+
+                        // dossier medical
+                        .requestMatchers(HttpMethod.GET,    "/api/dossier/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,    "/api/dossier/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/dossier/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/dossier/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/dossier/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
