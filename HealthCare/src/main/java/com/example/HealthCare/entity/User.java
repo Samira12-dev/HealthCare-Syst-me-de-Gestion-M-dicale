@@ -24,6 +24,9 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
