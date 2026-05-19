@@ -10,7 +10,12 @@ import com.example.HealthCare.mapper.RendezVousMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import com.example.HealthCare.repository.RendezVousRepo;
+import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -66,9 +71,11 @@ public class RendezVousService {
     }
 
     @Transactional
-    public List<RendezVousResponseDTO> getAllRendezVous(){
-      List<RendezVous> rendezVousList=rendezVousRepo.findAll();
-      return  rendezVousMapper.toDto(rendezVousList);
+    public Page<RendezVousResponseDTO> getAllRendezVous(int page, int size, String sortBy){
+        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
+
+      Page<RendezVous> rendezVousList=rendezVousRepo.findAll(pageable);
+      return  rendezVousList.map(rendezVousMapper::toDto);
     }
     @Transactional
     public List<RendezVousResponseDTO> rechercheRendezVousPatient(Long patientId){
@@ -96,6 +103,17 @@ public class RendezVousService {
         List<RendezVous> list= rendezVousRepo.findByStatut(statut);
         list.stream().filter(m->m.getMedecin().equals(medecin_id)).toList();
         return rendezVousMapper.toDto(list);
+    }
+    @Transactional
+    public Page<RendezVousResponseDTO> searchByStatus(
+            Status status,
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return rendezVousRepo.findByStatut(StatutRendezVous.PLANIFIE, pageable)
+                .map(rendezVousMapper::toDto);
     }
 
 }

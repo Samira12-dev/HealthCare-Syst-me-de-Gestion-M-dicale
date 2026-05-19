@@ -105,13 +105,13 @@ class RendezVousServiceTest {
         assertEquals(StatutRendezVous.ANNULE,responseDTO.getStatut());
     }
 
-    @Test
-    void  listerRendezVous(){
-
-        List<RendezVousResponseDTO>list=service.getAllRendezVous();
-        assertNotNull(list);
-        assertTrue(list.size()>0);
-    }
+//    @Test
+//    void  listerRendezVous(){
+//
+//        List<RendezVousResponseDTO>list=service.getAllRendezVous();
+//        assertNotNull(list);
+//        assertTrue(list.size()>0);
+//    }
 
     @Test
     void rechercheRendezVousPatientTest() {

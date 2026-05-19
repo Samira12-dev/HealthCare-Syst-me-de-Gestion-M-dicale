@@ -6,6 +6,10 @@ import com.example.HealthCare.entity.Medecin;
 import com.example.HealthCare.mapper.MedecinMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,8 +47,21 @@ public class MedecinService {
     }
 
     @Transactional
-   public List<MedecinResponseDTO> getAllMedecin(){
-        return  medecinMapper.toDTO(medecinRepo.findAll());
+   public Page<MedecinResponseDTO> getAllMedecin(int page, int size, String sortBy){
+        Pageable pageable= PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Medecin>medecins=medecinRepo.findAll(pageable);
+        return medecins.map(medecinMapper::toDTO);
+   }
+   @Transactional
+   public Page<MedecinResponseDTO> searchDoctor(
+           String specialite,
+           int page,
+           int size
+   ) {
+       Pageable pageable = PageRequest.of(page, size);
+
+       return medecinRepo.findBySpecialite(specialite, pageable)
+               .map(medecinMapper::toDTO);
    }
 }
 

@@ -2,12 +2,19 @@ package com.example.HealthCare.service;
 
 import com.example.HealthCare.dto.DossierMedicalRequestDto;
 import com.example.HealthCare.dto.DossierMedicalResponseDto;
+import com.example.HealthCare.dto.MedecinResponseDTO;
+import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.DossierMedical;
 import com.example.HealthCare.entity.Patient;
+import com.example.HealthCare.entity.RendezVous;
 import com.example.HealthCare.mapper.DossierMedicalMapper;
 import com.example.HealthCare.repository.DossierMedicalRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,5 +63,12 @@ public class DossierMedicalService {
     public  DossierMedicalResponseDto findDossierMedicalById(Long id){
         DossierMedical dossier = dossierMedicalRepo.findById(id).orElseThrow(()->new RuntimeException("Dossier not found"));
         return  dossierMedicalMapper.toDto(dossier);
+    }
+    @Transactional
+    public Page<DossierMedicalResponseDto> getAllDossier(int page, int size, String sortBy){
+        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
+
+        Page<DossierMedical> medicals=dossierMedicalRepo.findAll(pageable);
+        return  medicals.map(dossierMedicalMapper::toDto);
     }
 }

@@ -6,6 +6,10 @@ import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.mapper.PatientMapper;
 import com.example.HealthCare.repository.PatientRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,15 +45,22 @@ public class PatientService {
     }
 
     @Transactional
-    public List<PatientResponseDTO> getAllPatient(){
-        List<Patient> patientList =patientRepo.findAll();
-        return patientMapper.toDto(patientList);
+    public Page<PatientResponseDTO> getAllPatient(int page,int size,String sortby){
+        Pageable pageable= PageRequest.of(page,size, Sort.by(sortby).ascending());
+        Page<Patient> patients= patientRepo.findAll(pageable);
+        return patients.map(patientMapper::toDto);
     }
 
     @Transactional
     public  PatientResponseDTO  getPatientById(Long id){
         Patient patient= patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         return patientMapper.toDto(patient);
+    }
+
+    @Transactional
+   public Page<Patient>searchPatient(String nom, int page, int size){
+        Pageable pageable=PageRequest.of(page,size);
+        return patientRepo.findByNomContaining(nom,pageable);
     }
 
 }

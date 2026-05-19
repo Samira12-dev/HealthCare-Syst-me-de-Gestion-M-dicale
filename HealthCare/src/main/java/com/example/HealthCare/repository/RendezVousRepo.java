@@ -2,6 +2,9 @@ package com.example.HealthCare.repository;
 
 import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.RendezVous;
+import com.example.HealthCare.entity.StatutRendezVous;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +17,7 @@ public interface RendezVousRepo extends JpaRepository<RendezVous, Long> {
     List<RendezVous> findByMedecinId(Long medecinId);
 
     List<RendezVous> findByStatut(@Param("statut")String statut);
+
+    Page<RendezVous>findByStatut(StatutRendezVous statut, Pageable pageable);
 
 }

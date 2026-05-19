@@ -1,6 +1,9 @@
 package com.example.HealthCare.repository;
 
+import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,12 +2,14 @@ package com.example.HealthCare.controller;
 
 import com.example.HealthCare.dto.DossierMedicalRequestDto;
 import com.example.HealthCare.dto.DossierMedicalResponseDto;
+import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.service.DossierMedicalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name ="bearerAuth")
 @RestController
@@ -37,5 +39,11 @@ public class DossierMedicalContoller {
     @Operation(summary = "Consulter dossier")
     public DossierMedicalResponseDto getDossierMedicalById(@PathVariable Long id ){
         return dossierMedicalService.findDossierMedicalById(id);
+    }
+    @GetMapping
+    public Page<DossierMedicalResponseDto> getAllDossier(@RequestParam(defaultValue = "0")int page,
+                                                        @RequestParam(defaultValue = "5")int size,
+                                                        @RequestParam(defaultValue = "id")String sortBy) {
+        return dossierMedicalService.getAllDossier(page, size, sortBy);
     }
 }

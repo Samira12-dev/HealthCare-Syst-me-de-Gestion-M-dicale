@@ -2,11 +2,14 @@ package com.example.HealthCare.controller;
 
 import com.example.HealthCare.dto.MedecinRequestDTO;
 import com.example.HealthCare.dto.MedecinResponseDTO;
+import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.service.MedecinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +40,20 @@ public class MedecinController {
 
     @GetMapping
     @Operation(summary = "listerles medecins")
-    public List<MedecinResponseDTO>getAllMedecin(){
-        return medecinService.getAllMedecin();
+    public ResponseEntity<Page<MedecinResponseDTO>>getAllMedecin(@RequestParam (defaultValue = "0")int page,
+                                                                 @RequestParam(defaultValue = "10")int size,
+                                                                 @RequestParam(defaultValue = "speciality")String sortBy){
+
+
+        Page<MedecinResponseDTO> responseDTOS= medecinService.getAllMedecin(page, size, sortBy);
+        return ResponseEntity.ok(responseDTOS);
+
+    }
+    @GetMapping("/search")
+    public  Page<MedecinResponseDTO>searchBySpeciality(@RequestParam String speciality,
+                                                       @RequestParam (defaultValue = "0")int page,
+                                                       @RequestParam(defaultValue = "5")int size){
+        return medecinService.searchDoctor(speciality,page,size);
     }
 
 }

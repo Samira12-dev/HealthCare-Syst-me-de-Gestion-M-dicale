@@ -2,11 +2,14 @@ package com.example.HealthCare.controller;
 
 import com.example.HealthCare.dto.PatientRequestDTO;
 import com.example.HealthCare.dto.PatientResponseDTO;
+import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,14 +41,27 @@ public class PatientController {
 
     @GetMapping
     @Operation(summary = "lister les patients")
-    public List<PatientResponseDTO>getAllPatientss(){
-        return  patientService.getAllPatient();
+    public ResponseEntity<Page<PatientResponseDTO>>getAllPatientss(
+            @RequestParam(defaultValue = "0")int page,
+            @RequestParam(defaultValue = "10")int size,
+            @RequestParam(defaultValue = "id")String sortBy){
+
+        Page<PatientResponseDTO> result=patientService.getAllPatient(page,size,sortBy);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "supprimer patient par id")
     public PatientResponseDTO getPatientById(@PathVariable Long id){
         return patientService.getPatientById(id);
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Patient>>searchBYNom(@RequestParam String nom,
+                                                    @RequestParam(defaultValue = "0")int page,
+                                                    @RequestParam(defaultValue = "5")int size){
+        return ResponseEntity.ok(patientService.searchPatient(nom,page,size));
     }
 
 }

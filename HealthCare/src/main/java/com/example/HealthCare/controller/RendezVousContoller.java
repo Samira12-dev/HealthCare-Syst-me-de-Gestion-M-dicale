@@ -5,10 +5,12 @@ import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.service.RendezVousService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.transaction.Status;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -41,8 +43,10 @@ public class RendezVousContoller {
     }
     @GetMapping
     @Operation(summary = "lister les rendez_vous")
-    public List<RendezVousResponseDTO> getAllRendezVous(){
-        return rendezVousService.getAllRendezVous();
+    public Page<RendezVousResponseDTO> getAllRendezVous(@RequestParam(defaultValue = "0")int page,
+                                                     @RequestParam(defaultValue = "5")int size,
+                                                        @RequestParam(defaultValue = "date")String sortBy){
+        return rendezVousService.getAllRendezVous(page,size,sortBy);
     }
 
     @GetMapping("/patient/{patientId}")
@@ -56,6 +60,14 @@ public class RendezVousContoller {
         return rendezVousService.rechercheRendezVousMedecin(medecinId);
     }
 
+    @GetMapping("/search")
+    public Page<RendezVousResponseDTO> searchByStatus(
+            @RequestParam Status status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return rendezVousService.searchByStatus(status, page, size);
+    }
 
 
 }
