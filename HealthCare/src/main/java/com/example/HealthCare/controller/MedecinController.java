@@ -42,7 +42,7 @@ public class MedecinController {
     @Operation(summary = "listerles medecins")
     public ResponseEntity<Page<MedecinResponseDTO>>getAllMedecin(@RequestParam (defaultValue = "0")int page,
                                                                  @RequestParam(defaultValue = "10")int size,
-                                                                 @RequestParam(defaultValue = "speciality")String sortBy){
+                                                                 @RequestParam(defaultValue = "specialite")String sortBy){
 
 
         Page<MedecinResponseDTO> responseDTOS= medecinService.getAllMedecin(page, size, sortBy);

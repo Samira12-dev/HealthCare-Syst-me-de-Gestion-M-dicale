@@ -44,7 +44,7 @@ public class PatientController {
     public ResponseEntity<Page<PatientResponseDTO>>getAllPatientss(
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10")int size,
-            @RequestParam(defaultValue = "id")String sortBy){
+            @RequestParam(defaultValue = "nom")String sortBy){
 
         Page<PatientResponseDTO> result=patientService.getAllPatient(page,size,sortBy);
         return ResponseEntity.ok(result);
@@ -58,7 +58,7 @@ public class PatientController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Patient>>searchBYNom(@RequestParam String nom,
+    public ResponseEntity<Page<Patient>>searchByNom(@RequestParam String nom,
                                                     @RequestParam(defaultValue = "0")int page,
                                                     @RequestParam(defaultValue = "5")int size){
         return ResponseEntity.ok(patientService.searchPatient(nom,page,size));

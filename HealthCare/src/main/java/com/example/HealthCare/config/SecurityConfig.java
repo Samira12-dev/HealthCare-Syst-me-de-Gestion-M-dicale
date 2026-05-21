@@ -75,25 +75,25 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
 
                         //medecin & admin
-                        .requestMatchers(HttpMethod.GET, "/api/medecin/**").hasAnyRole("MEDECIN","ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/api/medecin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/api/medecin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/api/medecin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/medecins/**").hasAnyRole("MEDECIN","ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/medecins/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/medecins/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/medecins/**").hasRole("ADMIN")
 
                         //patient
-                        .requestMatchers(HttpMethod.GET,    "/api/patient/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT,    "/api/patient/me").hasRole("PATIENT")
-                        .requestMatchers(HttpMethod.GET,    "/api/patient/**").hasAnyRole("MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.POST,   "/api/patient/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,    "/api/patient/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/patient/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,    "/api/patients/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/patients/me").hasRole("PATIENT")
+                        .requestMatchers(HttpMethod.GET,    "/api/patients/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/patients/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/patients/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/patients/**").hasRole("ADMIN")
 
                         //rendez_vous
-                        .requestMatchers(HttpMethod.GET,    "/api/rendezVous/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.POST,   "/api/rendezVous/**").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.GET,    "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT,    "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/rendezVous/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,    "/api/rendez_vous/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/rendez_vous/**").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,    "/api/rendez_vous/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/rendez_vous/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/rendez_vous/**").hasAnyRole("MEDECIN", "ADMIN")
 
                         // dossier medical
                         .requestMatchers(HttpMethod.GET,    "/api/dossier/me").hasAnyRole("PATIENT", "MEDECIN", "ADMIN")

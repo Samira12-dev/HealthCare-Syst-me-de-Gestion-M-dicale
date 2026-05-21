@@ -32,7 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // ✅ IGNORE SWAGGER + API DOCS
         if (path.contains("/swagger-ui") ||
                 path.contains("/api-docs")||
                 path.contains("/v3/api-docs") ||
@@ -48,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        // ❌ No token → continue
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;

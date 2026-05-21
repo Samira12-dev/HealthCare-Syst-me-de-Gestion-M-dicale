@@ -2,6 +2,7 @@ package com.example.HealthCare.controller;
 
 import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
+import com.example.HealthCare.entity.StatutRendezVous;
 import com.example.HealthCare.service.RendezVousService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,7 +46,7 @@ public class RendezVousContoller {
     @Operation(summary = "lister les rendez_vous")
     public Page<RendezVousResponseDTO> getAllRendezVous(@RequestParam(defaultValue = "0")int page,
                                                      @RequestParam(defaultValue = "5")int size,
-                                                        @RequestParam(defaultValue = "date")String sortBy){
+                                                        @RequestParam(defaultValue = "dateRendezVous")String sortBy){
         return rendezVousService.getAllRendezVous(page,size,sortBy);
     }
 
@@ -62,7 +63,7 @@ public class RendezVousContoller {
 
     @GetMapping("/search")
     public Page<RendezVousResponseDTO> searchByStatus(
-            @RequestParam Status status,
+            @RequestParam StatutRendezVous status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ) {

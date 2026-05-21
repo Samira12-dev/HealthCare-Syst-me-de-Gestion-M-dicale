@@ -97,22 +97,21 @@ public class RendezVousService {
         return rendezVousMapper.toDto(rendezVous);
     }
 
-    @Transactional
-    public List<RendezVousResponseDTO> getRendezVousByStatu( Long medecin_id,String statut){
-        Medecin medecin =medecinRepo.findById(medecin_id).orElseThrow(()->new RuntimeException("not found"));
-        List<RendezVous> list= rendezVousRepo.findByStatut(statut);
-        list.stream().filter(m->m.getMedecin().equals(medecin_id)).toList();
-        return rendezVousMapper.toDto(list);
-    }
+//    @Transactional
+//    public Page<RendezVousResponseDTO> getRendezVousByStatu( Long medecin_id,StatutRendezVous statut,Pageable  pageable){
+//        Medecin medecin =medecinRepo.findById(medecin_id).orElseThrow(()->new RuntimeException("not found"));
+//       return  rendezVousRepo.findByStatut(statut,medecin_id,pageable)
+//               .map(rendezVousMapper::toDto);
+//    }
     @Transactional
     public Page<RendezVousResponseDTO> searchByStatus(
-            Status status,
+            StatutRendezVous status,
             int page,
             int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return rendezVousRepo.findByStatut(StatutRendezVous.PLANIFIE, pageable)
+        return rendezVousRepo.findByStatut(status, pageable)
                 .map(rendezVousMapper::toDto);
     }
 
