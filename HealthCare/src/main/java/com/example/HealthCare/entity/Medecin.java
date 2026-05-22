@@ -1,26 +1,21 @@
 package com.example.HealthCare.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Medecin {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@DiscriminatorValue("MEDECIN")
+@PrimaryKeyJoinColumn(name = "id")
+public class Medecin extends User{
     private String nom;
     private String specialite;
-    private String email;
     private String telephone;
-
     @OneToMany(mappedBy = "medecin")
     private List<RendezVous>rendezVousList;
-
 }

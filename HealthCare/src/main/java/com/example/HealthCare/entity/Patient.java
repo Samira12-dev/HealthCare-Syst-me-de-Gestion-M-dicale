@@ -1,25 +1,25 @@
 package com.example.HealthCare.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Past;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@DiscriminatorValue("PATIENT")
+@PrimaryKeyJoinColumn(name = "id")
+public class Patient  extends User{
+
     private String nom;
     private String prenom;
-    private String email;
     private String  telephone;
+    @Past
     private LocalDate dateNaissance;
 
     @OneToMany(mappedBy = "patient")

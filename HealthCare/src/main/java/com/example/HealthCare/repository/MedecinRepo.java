@@ -5,8 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MedecinRepo  extends JpaRepository<Medecin,Long> {
+import java.util.Optional;
 
-    boolean existsByEmail(String email);
+public interface MedecinRepo  extends JpaRepository<Medecin,Long> {
+Optional<Medecin>findByEmail(String email);
     Page<Medecin> findBySpecialite(String specialite, Pageable pageable);
 }

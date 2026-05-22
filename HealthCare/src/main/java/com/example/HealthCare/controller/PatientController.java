@@ -64,4 +64,16 @@ public class PatientController {
         return ResponseEntity.ok(patientService.searchPatient(nom,page,size));
     }
 
+
+    @GetMapping("/me")
+    @Operation(summary = "Consulter mon profil")
+    public  ResponseEntity<PatientResponseDTO>getMyProfile(){
+        return ResponseEntity.ok(patientService.getMyProfile());
+    }
+
+    @PutMapping("/me")
+    @Operation(summary = "Modifier certaines informations personnelles")
+    public ResponseEntity<PatientResponseDTO> updateMyProfile(@RequestBody PatientRequestDTO dto){
+        return ResponseEntity.ok(patientService.updateMyProfile(dto));
+    }
 }

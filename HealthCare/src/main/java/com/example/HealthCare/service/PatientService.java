@@ -1,5 +1,6 @@
 package com.example.HealthCare.service;
 
+import com.example.HealthCare.config.SecurityConfig;
 import com.example.HealthCare.dto.PatientRequestDTO;
 import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.entity.Patient;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class PatientService {
 
     @Transactional
     public PatientResponseDTO addPatient(PatientRequestDTO patientDTO) {
-        if(patientRepo.existsByEmail(patientDTO.getEmail())){
+        if(patientRepo.findByEmail(patientDTO.getEmail()).isPresent()){
            throw  new RuntimeException("Email already exist");
         }
         Patient addPAtient= patientMapper.toEntity(patientDTO);
@@ -63,5 +65,30 @@ public class PatientService {
         return patientRepo.findByNomContaining(nom,pageable);
     }
 
+
+    @Transactional
+    public PatientResponseDTO getMyProfile(){
+        String email= SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Patient patient= patientRepo.findByEmail(email).orElseThrow(()->new RuntimeException( "Not found"));
+        return patientMapper.toDto(patient);
+    }
+
+    @Transactional
+    public  PatientResponseDTO updateMyProfile(PatientRequestDTO dto){
+
+        String email= SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        Patient patient =patientRepo.findByEmail(email).orElseThrow(()->new RuntimeException("not found"));
+        patient.setNom(dto.getNom());
+        patient.setPrenom(dto.getPrenom());
+        patient.setTelephone(dto.getTelephone());
+        return patientMapper.toDto(patient);
+    }
 }
 

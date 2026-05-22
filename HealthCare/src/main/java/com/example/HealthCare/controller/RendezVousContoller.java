@@ -6,12 +6,12 @@ import com.example.HealthCare.entity.StatutRendezVous;
 import com.example.HealthCare.service.RendezVousService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.transaction.Status;
+
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @SecurityRequirement(name ="bearerAuth")
 @RestController
-@RequestMapping("api/rendez_vous")
+@RequestMapping("/api/rendez_vous")
 @RequiredArgsConstructor
 public class RendezVousContoller {
     private final RendezVousService rendezVousService;
@@ -70,6 +70,17 @@ public class RendezVousContoller {
         return rendezVousService.searchByStatus(status, page, size);
     }
 
-
+    @GetMapping("/me")
+    @Operation(summary = "Consulter mon rendez-vous")
+    public ResponseEntity<List<RendezVousResponseDTO>> getMyRendezVous(){
+        return ResponseEntity.ok(rendezVousService.getMyRendezVous());
+    }
+    @GetMapping("/medecin/me")
+    @Operation(summary = "Consulter ses rendez-vous pour medecin")
+    public ResponseEntity<List<RendezVousResponseDTO>> getMedecinRendezVous() {
+        return ResponseEntity.ok(
+                rendezVousService.getMyRendezVousMedecin()
+        );
+    }
 }
 

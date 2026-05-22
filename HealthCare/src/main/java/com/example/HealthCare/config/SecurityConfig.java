@@ -55,9 +55,9 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Swagger
                         .requestMatchers(
                                 "/api-docs/**",
                                 "/v3/api-docs/**",
@@ -67,7 +67,6 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-
                         //admin
                         .requestMatchers(HttpMethod.GET,    "/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,   "/api/users/**").hasRole("ADMIN")

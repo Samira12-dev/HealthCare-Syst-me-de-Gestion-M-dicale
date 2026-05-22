@@ -25,7 +25,7 @@ public class MedecinService {
 
     @Transactional
     public MedecinResponseDTO addMedecin(MedecinRequestDTO medecinRequestDTO) {
-        if(medecinRepo.existsByEmail(medecinRequestDTO.getEmail())){
+        if(medecinRepo.findByEmail(medecinRequestDTO.getEmail()).isPresent()){
             throw  new RuntimeException("already exists");
         }
         Medecin addMedecin=medecinMapper.toEntity(medecinRequestDTO);

@@ -1,8 +1,11 @@
 package com.example.HealthCare.service;
 
+import com.example.HealthCare.dto.DossierMedicalResponseDto;
 import com.example.HealthCare.entity.User;
 import com.example.HealthCare.repository.UserRepo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,4 +32,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .authorities("ROLE_"+user.getRole().name())
                 .build();
     }
+
 }

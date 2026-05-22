@@ -10,7 +10,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @SecurityRequirement(name ="bearerAuth")
 @RestController
 @RequestMapping("/api/dossier")
@@ -41,9 +47,18 @@ public class DossierMedicalContoller {
         return dossierMedicalService.findDossierMedicalById(id);
     }
     @GetMapping
+    @Operation(summary = "Consulter les dossiers médicaux ")
     public Page<DossierMedicalResponseDto> getAllDossier(@RequestParam(defaultValue = "0")int page,
                                                         @RequestParam(defaultValue = "5")int size,
                                                         @RequestParam(defaultValue = "id")String sortBy) {
         return dossierMedicalService.getAllDossier(page, size, sortBy);
     }
+
+    @GetMapping("/me")
+    @Operation(summary ="Consulter mon dossier médical" )
+    public ResponseEntity<DossierMedicalResponseDto> getMyDossier(){
+        return  ResponseEntity.ok(dossierMedicalService.getMyDossier());
+    }
+
+
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,5 +71,24 @@ public class DossierMedicalService {
 
         Page<DossierMedical> medicals=dossierMedicalRepo.findAll(pageable);
         return  medicals.map(dossierMedicalMapper::toDto);
+    }
+
+
+    @Transactional
+    public DossierMedicalResponseDto getMyDossier(){
+
+        String email= SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Patient patient =patientRepo.findByEmail(email).orElseThrow(()->new RuntimeException("Not found"));
+        DossierMedical dossierMedical=dossierMedicalRepo.findByPatientId(patient.getId()).orElseThrow(()->new RuntimeException(" Dossier not found"));
+        return dossierMedicalMapper.toDto(dossierMedical);
+    }
+
+    @Transactional
+    public Page<DossierMedicalResponseDto>grtAlldossier(Pageable pageable){
+        return dossierMedicalRepo.findAll(pageable).map(dossierMedicalMapper::toDto);
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-05-19T13:03:50+0100",
+    date = "2026-05-21T17:58:14+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -55,9 +55,9 @@ public class MedecinMapperImpl implements MedecinMapper {
 
         Medecin medecin = new Medecin();
 
+        medecin.setEmail( medecinRequestDTO.getEmail() );
         medecin.setNom( medecinRequestDTO.getNom() );
         medecin.setSpecialite( medecinRequestDTO.getSpecialite() );
-        medecin.setEmail( medecinRequestDTO.getEmail() );
         medecin.setTelephone( medecinRequestDTO.getTelephone() );
 
         return medecin;
@@ -69,9 +69,9 @@ public class MedecinMapperImpl implements MedecinMapper {
             return;
         }
 
+        med.setEmail( medecinRequestDTO.getEmail() );
         med.setNom( medecinRequestDTO.getNom() );
         med.setSpecialite( medecinRequestDTO.getSpecialite() );
-        med.setEmail( medecinRequestDTO.getEmail() );
         med.setTelephone( medecinRequestDTO.getTelephone() );
     }
 }

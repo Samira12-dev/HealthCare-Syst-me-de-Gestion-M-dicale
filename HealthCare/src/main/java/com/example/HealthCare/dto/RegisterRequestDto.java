@@ -23,4 +23,9 @@ public class RegisterRequestDto {
     private String password;
 
     private Role role;
+
+    private PatientRequestDTO patient;
+    private MedecinRequestDTO medecin;
+
 }
+

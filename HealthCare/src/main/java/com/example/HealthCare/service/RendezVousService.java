@@ -10,12 +10,12 @@ import com.example.HealthCare.mapper.RendezVousMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import com.example.HealthCare.repository.RendezVousRepo;
-import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -114,5 +114,45 @@ public class RendezVousService {
         return rendezVousRepo.findByStatut(status, pageable)
                 .map(rendezVousMapper::toDto);
     }
+
+
+     //patient
+    @Transactional
+    public List<RendezVousResponseDTO> getMyRendezVous(){
+        String email= SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Patient patient= patientRepo.findByEmail(email).orElseThrow(()->new RuntimeException("Not found"));
+
+        List<RendezVous> list= rendezVousRepo.findByPatientId(patient.getId());
+        return  list.stream().map(rendezVousMapper::toDto).toList();
+    }
+
+    public List<RendezVousResponseDTO> getMyRendezVousMedecin() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        Medecin medecin = medecinRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Medecin not found"));
+
+        List<RendezVous> list = rendezVousRepo.findByMedecinId(medecin.getId());
+
+        return list.stream()
+                .map(rdv -> new RendezVousResponseDTO(
+                        rdv.getId(),
+                        rdv.getDateRendezVous(),
+                        rdv.getStatut(),
+                        rdv.getPatient().getId(),
+                        rdv.getMedecin().getId()
+                ))
+                .toList();
+    }
+
+
+
 
 }
