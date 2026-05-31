@@ -58,6 +58,7 @@ public class PatientController {
 
 
     @GetMapping("/search")
+    @Operation(summary ="search by nom")
     public ResponseEntity<Page<Patient>>searchByNom(@RequestParam String nom,
                                                     @RequestParam(defaultValue = "0")int page,
                                                     @RequestParam(defaultValue = "5")int size){

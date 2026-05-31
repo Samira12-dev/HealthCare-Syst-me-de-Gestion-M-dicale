@@ -50,6 +50,7 @@ public class MedecinController {
 
     }
     @GetMapping("/search")
+    @Operation(summary = "search by speciality")
     public  Page<MedecinResponseDTO>searchBySpeciality(@RequestParam String speciality,
                                                        @RequestParam (defaultValue = "0")int page,
                                                        @RequestParam(defaultValue = "5")int size){

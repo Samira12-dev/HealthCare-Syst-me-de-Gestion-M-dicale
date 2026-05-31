@@ -62,6 +62,7 @@ public class RendezVousContoller {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "recherch rendez_vous par statut")
     public Page<RendezVousResponseDTO> searchByStatus(
             @RequestParam StatutRendezVous status,
             @RequestParam(defaultValue = "0") int page,
