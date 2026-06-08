@@ -12,6 +12,10 @@ import com.example.HealthCare.repository.PatientRepo;
 import com.example.HealthCare.repository.RendezVousRepo;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +41,7 @@ public class RendezVousService {
     }
 
     @Transactional
+    @CacheEvict(value = "RENDEZ_VOUS_CACHE", allEntries = true)
     public RendezVousResponseDTO createRendezVous(RendezVouRequestDTO  rendezVouRequestDTO) {
         RendezVous createRendezVous= rendezVousMapper.toEntity(rendezVouRequestDTO);
 
@@ -53,16 +58,12 @@ public class RendezVousService {
     }
 
     @Transactional
+    @CachePut(value = "RENDEZ_VOUS_CACHE",key = "#id")
     public RendezVousResponseDTO updateRendezVous(Long id, RendezVouRequestDTO requestDTO){
         RendezVous rendezVous =rendezVousRepo.findById(id).orElseThrow(()->new RuntimeException("RendezVous Not Found"));
        Patient patient= patientRepo.findById(requestDTO.getPatientId()).orElseThrow(()->new RuntimeException("Patient Not Found"));
        Medecin medecin= medecinRepo.findById(requestDTO.getMedecinId()).orElseThrow(()->new RuntimeException("Medecin Not Found"));
 
-//        rendezVous.setDateRendezVous(requestDTO.getDateRendezVous());
-//
-//        if(requestDTO.getStatut()!=null){
-//            rendezVous.setStatut(requestDTO.getStatut());
-//        }
         rendezVousMapper.update(requestDTO,rendezVous);
         rendezVous.setPatient(patient);
         rendezVous.setMedecin(medecin);
@@ -71,6 +72,7 @@ public class RendezVousService {
     }
 
     @Transactional
+    @Cacheable(value = "RENDEZ_VOUS_CACHE", key = "#nom + '-' + #page + '-' + #size")
     public Page<RendezVousResponseDTO> getAllRendezVous(int page, int size, String sortBy){
         Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
 
@@ -78,18 +80,24 @@ public class RendezVousService {
       return  rendezVousList.map(rendezVousMapper::toDto);
     }
     @Transactional
+    @Cacheable(value = "RENDEZVOUS_PATIENT_CACHE", key = "#patientId")
     public List<RendezVousResponseDTO> rechercheRendezVousPatient(Long patientId){
         List<RendezVous>listOfPatient=rendezVousRepo.findByPatientId(patientId);
         return rendezVousMapper.toDto(listOfPatient);
     }
 
     @Transactional
+    @Cacheable(value = "RENDEZVOUS_MEDECIN_CACHE", key = "#medecinId")
     public List<RendezVousResponseDTO> rechercheRendezVousMedecin(Long medecinId){
         List<RendezVous> listOfMedecin=rendezVousRepo.findByMedecinId(medecinId);
         return rendezVousMapper.toDto(listOfMedecin);
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "RENDEZVOUS_PATIENT_CACHE", allEntries = true),
+            @CacheEvict(value = "RENDEZVOUS_MEDECIN_CACHE", allEntries = true)
+    })
     public RendezVousResponseDTO annulerRendezVous(Long id){
         RendezVous rendezVous= rendezVousRepo.findById(id).orElseThrow(()->new RuntimeException("RendezVous Not Found"));
         rendezVous.setStatut(StatutRendezVous.ANNULE);

@@ -11,6 +11,8 @@ import com.example.HealthCare.mapper.DossierMedicalMapper;
 import com.example.HealthCare.repository.DossierMedicalRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ public class DossierMedicalService {
 
 
     @Transactional
+    @CacheEvict(value = "DOSSIER_CACHE",allEntries = true)
     public DossierMedicalResponseDto createDossier(DossierMedicalRequestDto dossierRequestDto) {
 
         DossierMedical dossierMedical=dossierMedicalMapper.toEntity(dossierRequestDto);
@@ -43,6 +46,7 @@ public class DossierMedicalService {
     }
 
     @Transactional
+    @CacheEvict(value = "DOSSIER_CACHE",key ="#patientid")
     public DossierMedicalResponseDto ajouterDiagnostic(Long patientid,String diagnostic) {
         DossierMedical dossier = dossierMedicalRepo.findById(patientid)
                 .orElseThrow(() -> new RuntimeException("Dossier not found"));
@@ -52,6 +56,7 @@ public class DossierMedicalService {
     }
 
     @Transactional
+    @CacheEvict(value = "DOSSIER_CACHE",key ="#patientId")
     public DossierMedicalResponseDto ajouterObeservation(Long patientId,String observation) {
         DossierMedical dossierMedical=dossierMedicalRepo.findById(patientId).orElseThrow(()->new RuntimeException("Dossier not found"));
         dossierMedical.setObservation(observation);
@@ -60,11 +65,13 @@ public class DossierMedicalService {
     }
 
     @Transactional
+    @Cacheable(value = "DOSSIER_CACHE",key = "#id")
     public  DossierMedicalResponseDto findDossierMedicalById(Long id){
         DossierMedical dossier = dossierMedicalRepo.findById(id).orElseThrow(()->new RuntimeException("Dossier not found"));
         return  dossierMedicalMapper.toDto(dossier);
     }
     @Transactional
+    @Cacheable(value = "DOSSIER_CACHE",key = "#page +'-'+ #size +'-' + #sortBy")
     public Page<DossierMedicalResponseDto> getAllDossier(int page, int size, String sortBy){
         Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
 

@@ -6,6 +6,9 @@ import com.example.HealthCare.entity.Medecin;
 import com.example.HealthCare.mapper.MedecinMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class MedecinService {
     }
 
     @Transactional
+    @CacheEvict(value = "MEDECIN_CACHE",allEntries = true)
     public MedecinResponseDTO addMedecin(MedecinRequestDTO medecinRequestDTO) {
         if(medecinRepo.existsByEmail(medecinRequestDTO.getEmail())){
             throw  new RuntimeException("already exists");
@@ -34,6 +38,7 @@ public class MedecinService {
     }
 
     @Transactional
+    @CachePut(value = "MEDECIN_CACHE",key = "#id")
     public MedecinResponseDTO updaMedecin( Long id, MedecinRequestDTO medecindto){
         Medecin findMedecin= medecinRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         medecinMapper.update(medecindto,findMedecin);
@@ -42,17 +47,20 @@ public class MedecinService {
     }
 
     @Transactional
+    @CacheEvict(value = "MEDECIN_CACHE",key = "#id")
     public  void deleteMedecin(Long id){
         medecinRepo.deleteById(id);
     }
 
     @Transactional
+    @Cacheable(value = "MEDECIN_CACHE",key = "#page + '-' + #size + '-' + #sortBy")
    public Page<MedecinResponseDTO> getAllMedecin(int page, int size, String sortBy){
         Pageable pageable= PageRequest.of(page, size, Sort.by(sortBy).ascending());
         Page<Medecin>medecins=medecinRepo.findAll(pageable);
         return medecins.map(medecinMapper::toDTO);
    }
    @Transactional
+   @Cacheable(value = "MEDECIN_CACHE", key = "#nom + '-' + #page + '-' + #size")
    public Page<MedecinResponseDTO> searchDoctor(
            String specialite,
            int page,
