@@ -10,6 +10,10 @@ import com.example.HealthCare.entity.RendezVous;
 import com.example.HealthCare.mapper.DossierMedicalMapper;
 import com.example.HealthCare.repository.DossierMedicalRepo;
 import com.example.HealthCare.repository.PatientRepo;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,7 +21,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 @Service
 public class DossierMedicalService {
@@ -78,4 +88,29 @@ public class DossierMedicalService {
         Page<DossierMedical> medicals=dossierMedicalRepo.findAll(pageable);
         return  medicals.map(dossierMedicalMapper::toDto);
     }
+
+    @Transactional
+    public byte[] telechargePDF(Long patientId) throws FileNotFoundException, DocumentException {
+        Patient  patient = patientRepo.findById(patientId).orElseThrow(()->new RuntimeException("Patient not found with this id "+ patientId));
+        ByteArrayOutputStream byteArray=new ByteArrayOutputStream();
+        Document document= new Document();
+        String fileName= "dossier_medical"+ patientId +".pdf";
+        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+        document.open();
+        document.add(new Paragraph("=== DOSSIER MEDICAL ==="));
+        document.add(new Paragraph("ID Patient: " + patient.getId()));
+        document.add(new Paragraph("Nom" + patient.getNom()));
+        document.add(new Paragraph("Perenom " + patient.getPrenom()));
+        document.add(new Paragraph(String.valueOf("Date naissance" + patient.getDateNaissance())));
+        document.add(new Paragraph("TelEphone "+ patient.getTelephone()));
+        document.add(new Paragraph( "Email " + patient.getEmail()));
+
+        if(patient.getDossierMedical() != null){
+            document.add(new Paragraph("Dossier medical "+patient.getDossierMedical().getId()));
+        }
+        document.close();
+
+       return byteArray.toByteArray();
+    }
+
 }
