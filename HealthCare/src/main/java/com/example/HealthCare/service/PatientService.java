@@ -63,5 +63,7 @@ public class PatientService {
         return patientRepo.findByNomContaining(nom,pageable);
     }
 
+
+
 }
 

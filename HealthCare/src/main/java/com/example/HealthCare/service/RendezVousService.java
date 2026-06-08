@@ -115,4 +115,9 @@ public class RendezVousService {
                 .map(rendezVousMapper::toDto);
     }
 
+    public Page<RendezVousResponseDTO> findByDateRendezVous(LocalDate datee, int page, int size) {
+        Pageable pageable =PageRequest.of(page,size);
+        Page<RendezVous> rendezVous= rendezVousRepo.findByDateRendezVous(pageable,datee);
+        return  rendezVous.map(rendezVousMapper::toDto);
+    }
 }

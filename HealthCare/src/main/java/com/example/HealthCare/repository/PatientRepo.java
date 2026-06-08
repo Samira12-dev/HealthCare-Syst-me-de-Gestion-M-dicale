@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PatientRepo extends JpaRepository<Patient,Long> {
-    Page<Patient> findByNomContaining(String nom, Pageable pageable); // بحث مع pagination
+    Page<Patient> findByNomContaining(String nom, Pageable pageable);
 
     boolean existsByEmail(String email);
+
 }
