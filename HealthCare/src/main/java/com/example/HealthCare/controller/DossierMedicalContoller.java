@@ -52,8 +52,8 @@ public class DossierMedicalContoller {
     }
 
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<byte[]>  downloadPDF(@PathVariable Long id)throws Exception{
-        byte[] pdf= dossierMedicalService.telechargePDF(id);
+    public ResponseEntity<String>  downloadPDF(@PathVariable Long id)throws Exception{
+       String pdf= dossierMedicalService.telechargePDF(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,"attechment ; file=dossier_medical.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

@@ -10,6 +10,11 @@ import com.example.HealthCare.mapper.RendezVousMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import com.example.HealthCare.repository.RendezVousRepo;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,6 +27,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -128,4 +136,34 @@ public class RendezVousService {
         Page<RendezVous> rendezVous= rendezVousRepo.findByDateRendezVous(pageable,datee);
         return  rendezVous.map(rendezVousMapper::toDto);
     }
+
+
+
+    @Transactional
+    public String generateRendezVousPDF(Long id)throws FileNotFoundException, DocumentException {
+        List<RendezVous> rendezVousList = rendezVousRepo.findByPatientId(id);
+        Patient patient =patientRepo.findById(id).orElseThrow(()->new RuntimeException("Patient not found"));
+
+        String fileName= "List Rendez_vous d'un patient"+ id + ".pdf";
+        Document document = new Document();
+
+        PdfWriter.getInstance(document,new FileOutputStream(fileName));
+        document.open();
+        document.add(new Paragraph("##########List Rendez_vous d'un patient########"));
+        document.add(new Paragraph("Patient "+ patient.getNom() +" " +patient.getPrenom()));
+        document.add(new Paragraph(patient.getListeRendezVous().size()));
+        PdfPTable table = new PdfPTable(3);
+        table.addCell("Date");
+        table.addCell("Heure");
+        table.addCell("Statut");
+        for(RendezVous rendezVous : rendezVousList){
+            table.addCell(rendezVous.getDateRendezVous().toLocalDate().toString());
+            table.addCell(rendezVous.getDateRendezVous().toLocalTime().toString());
+            table.addCell(rendezVous.getStatut().toString());
+        }
+        document.add(table);
+        document.close();
+        return fileName;
+    }
+
 }

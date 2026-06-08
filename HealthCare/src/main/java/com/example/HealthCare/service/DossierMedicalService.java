@@ -90,9 +90,9 @@ public class DossierMedicalService {
     }
 
     @Transactional
-    public byte[] telechargePDF(Long patientId) throws FileNotFoundException, DocumentException {
+    public String telechargePDF(Long patientId) throws FileNotFoundException, DocumentException {
         Patient  patient = patientRepo.findById(patientId).orElseThrow(()->new RuntimeException("Patient not found with this id "+ patientId));
-        ByteArrayOutputStream byteArray=new ByteArrayOutputStream();
+
         Document document= new Document();
         String fileName= "dossier_medical"+ patientId +".pdf";
         PdfWriter.getInstance(document, new FileOutputStream(fileName));
@@ -110,7 +110,7 @@ public class DossierMedicalService {
         }
         document.close();
 
-       return byteArray.toByteArray();
+       return fileName;
     }
 
 }

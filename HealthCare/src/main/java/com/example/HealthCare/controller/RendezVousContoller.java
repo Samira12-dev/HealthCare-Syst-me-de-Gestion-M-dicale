@@ -4,6 +4,7 @@ import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.StatutRendezVous;
 import com.example.HealthCare.service.RendezVousService;
+import com.itextpdf.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Status;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -82,6 +84,11 @@ public class RendezVousContoller {
                                                                             @RequestParam(defaultValue = "0")int page,
                                                                             @RequestParam(defaultValue = "10")int size){
         return  ResponseEntity.ok(rendezVousService.findByDateRendezVous(datee,page,size));
+    }
+    @PreAuthorize("hasAnyRole('ADMIN','MEDECIN')")
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<String> downloadPDF(@PathVariable Long id) throws DocumentException, FileNotFoundException {
+        return ResponseEntity.ok(rendezVousService.generateRendezVousPDF(id));
     }
 }
 
