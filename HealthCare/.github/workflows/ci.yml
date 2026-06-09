@@ -2,10 +2,10 @@ name: HealthCare CI/CD
 
 on:
   push:
-    branches: [ "main", "vehicule_features" ]
+    branches: [ "main" ]
     pull_request:
       branches: [ "main" ]
-      
+
 jobs:
   build-test-package:
     runs-on: ubuntu-latest
