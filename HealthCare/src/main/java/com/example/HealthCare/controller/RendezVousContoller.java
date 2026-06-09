@@ -90,5 +90,11 @@ public class RendezVousContoller {
     public ResponseEntity<String> downloadPDF(@PathVariable Long id) throws DocumentException, FileNotFoundException {
         return ResponseEntity.ok(rendezVousService.generateRendezVousPDF(id));
     }
+    @PreAuthorize("hasAnyRole('ADMIN','MEDECIN')")
+    @GetMapping("/{id}/rapport")
+    public ResponseEntity<String> downloadRapportSimple(@PathVariable Long id)throws  DocumentException,FileNotFoundException{
+        return ResponseEntity.ok(rendezVousService.generatrSimpleRapport(id));
+
+    }
 }
 

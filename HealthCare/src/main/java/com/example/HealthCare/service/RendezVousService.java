@@ -2,11 +2,9 @@ package com.example.HealthCare.service;
 
 import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
-import com.example.HealthCare.entity.Medecin;
-import com.example.HealthCare.entity.Patient;
-import com.example.HealthCare.entity.RendezVous;
-import com.example.HealthCare.entity.StatutRendezVous;
+import com.example.HealthCare.entity.*;
 import com.example.HealthCare.mapper.RendezVousMapper;
+import com.example.HealthCare.repository.DossierMedicalRepo;
 import com.example.HealthCare.repository.MedecinRepo;
 import com.example.HealthCare.repository.PatientRepo;
 import com.example.HealthCare.repository.RendezVousRepo;
@@ -41,11 +39,14 @@ public class RendezVousService {
     private final PatientRepo patientRepo;
     private final MedecinRepo  medecinRepo;
 
-    public RendezVousService(RendezVousRepo rendezVousRepo, RendezVousMapper rendezVousMapper, PatientRepo patientRepo, MedecinRepo medecinRepo) {
+    private  final DossierMedicalRepo dossierMedicalRepo;
+
+    public RendezVousService(RendezVousRepo rendezVousRepo, RendezVousMapper rendezVousMapper, PatientRepo patientRepo, MedecinRepo medecinRepo, DossierMedicalRepo dossierMedicalRepo) {
         this.rendezVousRepo = rendezVousRepo;
         this.rendezVousMapper = rendezVousMapper;
         this.patientRepo = patientRepo;
         this.medecinRepo = medecinRepo;
+        this.dossierMedicalRepo = dossierMedicalRepo;
     }
 
     @Transactional
@@ -164,6 +165,43 @@ public class RendezVousService {
         document.add(table);
         document.close();
         return fileName;
+    }
+
+    @Transactional
+    public String generatrSimpleRapport(Long patientID) throws FileNotFoundException, DocumentException {
+        Patient patient= patientRepo.findById(patientID).orElseThrow(()->new RuntimeException("Patient not found with this id "+patientID));
+        List<RendezVous> list = rendezVousRepo.findByPatientId(patientID);
+        DossierMedical dossierMedical= patient.getDossierMedical();
+
+        String rapportName = "simple_rapport_" + patientID + ".pdf";        Document document = new Document();
+        PdfWriter.getInstance(document,new FileOutputStream(rapportName));
+        document.open();
+        document.add(new Paragraph("RAPPORT MÉDICAL"));
+        document.add(new Paragraph("ID "+patient.getId()));
+        document.add(new Paragraph("Patient "+ patient.getNom() + " "+patient.getPrenom()));
+        document.add(new Paragraph("Telephone "+patient.getTelephone()));
+        document.add(new Paragraph("Email "+patient.getEmail()));
+        document.add(new Paragraph("-------------------------------------"));
+        document.add(new Paragraph("DOSSIER MÉDICAL:"));
+        document.add(new Paragraph("ID "+dossierMedical.getId()));
+        document.add(new Paragraph("Diagnostic "+dossierMedical.getDiagnostic()));
+        document.add(new Paragraph("Observation "+dossierMedical.getObservation()));
+        document.add(new Paragraph("Date Creation "+dossierMedical.getDateCreation()));
+        document.add(new Paragraph("-----------------------------------------------"));
+        document.add(new Paragraph("RENDEZ-VOUS:"));
+
+        for (RendezVous rvd: list){
+          document.add(new Paragraph("Date Rendez_vous"+ rvd.getDateRendezVous()));
+            if(rvd.getMedecin() != null) {
+                document.add(new Paragraph("Medecin " + rvd.getMedecin().getNom()));
+            }
+            document.add(new Paragraph("Statut"+rvd.getStatut()));
+        }
+        document.add(new Paragraph("Total rendez_vous"+ list.size()));
+        document.add(new Paragraph("-------------------------------------"));
+        document.add(new Paragraph("Date generation : " + LocalDate.now()));
+        document.close();
+        return rapportName;
     }
 
 }
