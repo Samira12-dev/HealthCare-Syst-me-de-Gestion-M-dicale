@@ -43,7 +43,11 @@ jobs:
       - name: Package application
         run: mvn package -DskipTests
         working-directory: HealthCare
-
+                             - name: Show files
+                             run: |
+                               pwd
+                               ls -la
+                               find . -name "pom.xml"
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
         with:
