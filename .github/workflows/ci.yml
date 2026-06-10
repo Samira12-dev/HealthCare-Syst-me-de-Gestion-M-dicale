@@ -10,25 +10,6 @@ jobs:
   build-test-package:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: healthCare_db
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -50,20 +31,3 @@ jobs:
       - name: Build and test
         run: mvn clean verify
         working-directory: HealthCare
-        env:
-          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/healthCare_db
-          SPRING_DATASOURCE_USERNAME: root
-          SPRING_DATASOURCE_PASSWORD: root
-          SPRING_REDIS_HOST: localhost
-          SPRING_REDIS_PORT: 6379
-          APP_SECRET_KEY: mysecretkeymysecretkeymysecretkey
-
-      - name: Package application
-        run: mvn package -DskipTests
-        working-directory: HealthCare
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: healthcare-app
-          path: HealthCare/target/*.jar
