@@ -44,10 +44,9 @@ public class PatientController {
     @Operation(summary = "lister les patients")
     public ResponseEntity<Page<PatientResponseDTO>>getAllPatientss(
             @RequestParam(defaultValue = "0")int page,
-            @RequestParam(defaultValue = "10")int size,
-            @RequestParam(defaultValue = "nom")String sortBy){
+            @RequestParam(defaultValue = "10")int size){
 
-        Page<PatientResponseDTO> result=patientService.getAllPatient(page,size,sortBy);
+        Page<PatientResponseDTO> result=patientService.getAllPatient(page,size);
         return ResponseEntity.ok(result);
     }
 
