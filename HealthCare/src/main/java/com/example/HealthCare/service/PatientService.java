@@ -6,6 +6,9 @@ import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.mapper.PatientMapper;
 import com.example.HealthCare.repository.PatientRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class PatientService {
     }
 
     @Transactional
+    @CacheEvict(value = "PATIENT_CACHE", allEntries = true)
     public PatientResponseDTO addPatient(PatientRequestDTO patientDTO) {
         if(patientRepo.existsByEmail(patientDTO.getEmail())){
            throw  new RuntimeException("Email already exist");
@@ -34,17 +38,20 @@ public class PatientService {
     }
 
     @Transactional
+    @CachePut(value = "PATIENT_CACHE",key ="#id")
     public PatientResponseDTO updatePatient(Long id, PatientRequestDTO dto) {
         Patient patient = patientRepo.findById(id).orElseThrow(() -> new RuntimeException("not found"));
         patientMapper.updatePatient(dto, patient);
         return patientMapper.toDto(patient);
     }
     @Transactional
+    @CacheEvict(value = "PATIENT_CACHE",key ="#id")
     public void deletePatient(Long id){
         patientRepo.deleteById(id);
     }
 
     @Transactional
+    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size + '-' + #sortby")
     public Page<PatientResponseDTO> getAllPatient(int page,int size,String sortby){
         Pageable pageable= PageRequest.of(page,size, Sort.by(sortby).ascending());
         Page<Patient> patients= patientRepo.findAll(pageable);
@@ -52,16 +59,21 @@ public class PatientService {
     }
 
     @Transactional
+    @Cacheable(value = "PATIENT_CACHE",key ="#id")
     public  PatientResponseDTO  getPatientById(Long id){
+        System.out.println("Fetching patient from DB...");
+        
         Patient patient= patientRepo.findById(id).orElseThrow(()->new RuntimeException("not found"));
         return patientMapper.toDto(patient);
     }
 
     @Transactional
-   public Page<Patient>searchPatient(String nom, int page, int size){
+    @Cacheable(value = "PATIENT_CACHE", key = "#nom + '-' + #page + '-' + #size")
+    public Page<Patient>searchPatient(String nom, int page, int size){
         Pageable pageable=PageRequest.of(page,size);
         return patientRepo.findByNomContaining(nom,pageable);
     }
+
 
 
 

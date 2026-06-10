@@ -3,6 +3,7 @@ package com.example.HealthCare.controller;
 import com.example.HealthCare.dto.DossierMedicalRequestDto;
 import com.example.HealthCare.dto.DossierMedicalResponseDto;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
+import com.example.HealthCare.entity.DossierMedical;
 import com.example.HealthCare.service.DossierMedicalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -10,6 +11,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name ="bearerAuth")
 @RestController
@@ -45,5 +49,14 @@ public class DossierMedicalContoller {
                                                         @RequestParam(defaultValue = "5")int size,
                                                         @RequestParam(defaultValue = "id")String sortBy) {
         return dossierMedicalService.getAllDossier(page, size, sortBy);
+    }
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<String>  downloadPDF(@PathVariable Long id)throws Exception{
+       String pdf= dossierMedicalService.telechargePDF(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attechment ; file=dossier_medical.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
