@@ -2,7 +2,7 @@ name: HealthCare CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main","part4" ]
   pull_request:
     branches: [ "main" ]
 
