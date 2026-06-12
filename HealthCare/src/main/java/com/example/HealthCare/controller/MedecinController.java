@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 public class MedecinController {
     private  final MedecinService medecinService;
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "ajouter medecin")
     public MedecinResponseDTO addMedecin(@Valid  @RequestBody MedecinRequestDTO medecinrequestdto){
