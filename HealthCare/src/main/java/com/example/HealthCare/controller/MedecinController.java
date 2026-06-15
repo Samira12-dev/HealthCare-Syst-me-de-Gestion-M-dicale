@@ -21,7 +21,6 @@ import java.util.List;
 public class MedecinController {
     private  final MedecinService medecinService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "ajouter medecin")
     public MedecinResponseDTO addMedecin(@Valid  @RequestBody MedecinRequestDTO medecinrequestdto){

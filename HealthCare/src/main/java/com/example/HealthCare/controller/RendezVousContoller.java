@@ -78,19 +78,19 @@ public class RendezVousContoller {
         return rendezVousService.searchByStatus(status, page, size);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MEDECIN')")
+
     @GetMapping("/tele")
     public ResponseEntity<Page<RendezVousResponseDTO>> findByDateRendezVous(@RequestParam LocalDate datee,
                                                                             @RequestParam(defaultValue = "0")int page,
                                                                             @RequestParam(defaultValue = "10")int size){
         return  ResponseEntity.ok(rendezVousService.findByDateRendezVous(datee,page,size));
     }
-    @PreAuthorize("hasAnyRole('ADMIN','MEDECIN')")
+
     @GetMapping("/{id}/pdf")
     public ResponseEntity<String> downloadPDF(@PathVariable Long id) throws DocumentException, FileNotFoundException {
         return ResponseEntity.ok(rendezVousService.generateRendezVousPDF(id));
     }
-    @PreAuthorize("hasAnyRole('ADMIN','MEDECIN')")
+
     @GetMapping("/{id}/rapport")
     public ResponseEntity<String> downloadRapportSimple(@PathVariable Long id)throws  DocumentException,FileNotFoundException{
         return ResponseEntity.ok(rendezVousService.generatrSimpleRapport(id));
