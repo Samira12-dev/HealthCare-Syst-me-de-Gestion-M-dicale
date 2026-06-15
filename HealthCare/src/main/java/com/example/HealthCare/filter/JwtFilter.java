@@ -72,7 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtUtils.validateToken(jwt, userDetails)) {
 
-                String role = jwtUtils.extractRole(jwt);
+
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
