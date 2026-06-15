@@ -80,7 +80,7 @@ public class SecurityConfig {
 
                         //medecin & admin
                         .requestMatchers(HttpMethod.GET, "/api/medecins/**").hasAnyRole("MEDECIN","ADMIN")
-//                        .requestMatchers(HttpMethod.POST,"/api/medecins/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/medecins/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/api/medecins/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/medecins/**").hasRole("ADMIN")
 
