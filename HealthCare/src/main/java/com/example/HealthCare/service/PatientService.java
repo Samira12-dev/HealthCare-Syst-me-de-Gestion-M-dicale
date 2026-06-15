@@ -51,9 +51,9 @@ public class PatientService {
     }
 
     @Transactional
-    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size + '-' + #sortby")
-    public Page<PatientResponseDTO> getAllPatient(int page,int size,String sortby){
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sortby).ascending());
+    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size ")
+    public Page<PatientResponseDTO> getAllPatient(int page,int size){
+        Pageable pageable= PageRequest.of(page,size);
         Page<Patient> patients= patientRepo.findAll(pageable);
         return patients.map(patientMapper::toDto);
     }

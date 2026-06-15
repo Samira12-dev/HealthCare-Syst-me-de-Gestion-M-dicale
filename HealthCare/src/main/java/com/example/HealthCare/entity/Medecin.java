@@ -11,13 +11,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Medecin {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Medecin extends User{
+
     private String nom;
     private String specialite;
-    private String email;
     private String telephone;
 
     @OneToMany(mappedBy = "medecin")

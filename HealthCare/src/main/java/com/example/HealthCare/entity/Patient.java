@@ -12,13 +12,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Patient extends User{
     private String nom;
     private String prenom;
-    private String email;
     private String  telephone;
     private LocalDate dateNaissance;
 

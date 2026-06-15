@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-06-09T12:22:29+0100",
+    date = "2026-06-12T16:20:06+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
@@ -56,9 +56,9 @@ public class PatientMapperImpl implements PatientMapper {
 
         Patient patient = new Patient();
 
+        patient.setEmail( patientRequestDTO.getEmail() );
         patient.setNom( patientRequestDTO.getNom() );
         patient.setPrenom( patientRequestDTO.getPrenom() );
-        patient.setEmail( patientRequestDTO.getEmail() );
         patient.setTelephone( patientRequestDTO.getTelephone() );
         patient.setDateNaissance( patientRequestDTO.getDateNaissance() );
 
@@ -71,9 +71,9 @@ public class PatientMapperImpl implements PatientMapper {
             return;
         }
 
+        patient.setEmail( patientRequestDTO.getEmail() );
         patient.setNom( patientRequestDTO.getNom() );
         patient.setPrenom( patientRequestDTO.getPrenom() );
-        patient.setEmail( patientRequestDTO.getEmail() );
         patient.setTelephone( patientRequestDTO.getTelephone() );
         patient.setDateNaissance( patientRequestDTO.getDateNaissance() );
     }
