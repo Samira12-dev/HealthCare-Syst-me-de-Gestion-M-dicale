@@ -39,6 +39,8 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+
+
 		<!-- Validation  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,15 +50,15 @@
 		<!-- Flyway -->
 
 
-			<dependency>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-core</artifactId>
-			</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 
-			<dependency>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-mysql</artifactId>
-			</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+		</dependency>
 
 		<!-- MySQL  -->
 		<dependency>
@@ -103,6 +105,18 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- JUnit Jupiter API (explicit) -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!--H2-->
 		<dependency>
@@ -137,7 +151,7 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
-       <!--JWT-->
+		<!--JWT-->
 
 		<!--REDIS-->
 		<dependency>
@@ -164,13 +178,6 @@
 		</dependency>
 		<!--FDP_itextpdf-->
 
-		<!--H2-->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!--H2-->
 	</dependencies>
 
 	<build>
@@ -186,7 +193,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.13.0</version>
 				<configuration>
 					<source>21</source>
 					<target>21</target>
