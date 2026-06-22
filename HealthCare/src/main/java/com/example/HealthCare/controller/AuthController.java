@@ -51,7 +51,6 @@ public class AuthController {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(dto.getRole()!= null ? dto.getRole() : Role.PATIENT);
-
         User savedUser = userRepo.save(user);
 
         String token = jwtUtils.generateToken(savedUser.getEmail(), savedUser.getRole().name());

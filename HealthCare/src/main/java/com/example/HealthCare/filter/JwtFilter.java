@@ -60,6 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             username = jwtUtils.extractUsername(jwt);
         } catch (Exception e) {
+            logger.warn("JWT rejected: " + e.getMessage());
             filterChain.doFilter(request, response);
             return;
         }
@@ -71,8 +72,6 @@ public class JwtFilter extends OncePerRequestFilter {
                     customUserDetailsService.loadUserByUsername(username);
 
             if (jwtUtils.validateToken(jwt, userDetails)) {
-
-
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
