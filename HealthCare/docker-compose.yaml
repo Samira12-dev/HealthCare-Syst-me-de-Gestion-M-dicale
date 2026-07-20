@@ -15,12 +15,27 @@ services:
       - mysql_data:/var/lib/mysql
 
     healthcheck:
-        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost",
-                "-u", "root", "-pSamira12" ]
-        interval: 10s
-        timeout: 5s
-        retries: 10
-        start_period: 30s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "root", "-pSamira12"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: healthcare-redis
+
+    ports:
+      - "6379:6379"
+
+    networks:
+      - health-net
+
+    volumes:
+      - redis_data:/data
+
 
   app:
     build: .
@@ -32,18 +47,26 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/healthCare_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Samira12
 
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+
     networks:
       - health-net
+
 
 networks:
   health-net:
     driver: bridge
 
+
 volumes:
   mysql_data:
+  redis_data:

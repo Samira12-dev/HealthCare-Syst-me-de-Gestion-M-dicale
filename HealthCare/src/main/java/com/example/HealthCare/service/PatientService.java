@@ -3,9 +3,11 @@ package com.example.HealthCare.service;
 import com.example.HealthCare.dto.PatientRequestDTO;
 import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.entity.Patient;
+import com.example.HealthCare.entity.Role;
 import com.example.HealthCare.mapper.PatientMapper;
 import com.example.HealthCare.repository.PatientRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
 public class PatientService {
     private final PatientRepo  patientRepo;
     private final PatientMapper patientMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public  PatientService(PatientRepo patientRepo, PatientMapper patientMapper) {
         this.patientRepo = patientRepo;
         this.patientMapper = patientMapper;
@@ -33,6 +38,9 @@ public class PatientService {
            throw  new RuntimeException("Email already exist");
         }
         Patient addPAtient= patientMapper.toEntity(patientDTO);
+        addPAtient.setPassword(passwordEncoder.encode("samira12"));
+        addPAtient.setUsername(patientDTO.getNom());
+        addPAtient.setRole(Role.PATIENT);
         Patient savedPatient = patientRepo.save(addPAtient);
         return patientMapper.toDto(savedPatient);
     }

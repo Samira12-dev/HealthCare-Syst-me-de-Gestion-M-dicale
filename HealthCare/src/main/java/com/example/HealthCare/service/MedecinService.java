@@ -3,9 +3,11 @@ package com.example.HealthCare.service;
 import com.example.HealthCare.dto.MedecinRequestDTO;
 import com.example.HealthCare.dto.MedecinResponseDTO;
 import com.example.HealthCare.entity.Medecin;
+import com.example.HealthCare.entity.Role;
 import com.example.HealthCare.mapper.MedecinMapper;
 import com.example.HealthCare.repository.MedecinRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
 public class MedecinService {
     private final MedecinRepo medecinRepo;
     private final MedecinMapper medecinMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public MedecinService(MedecinRepo medecinRepo, MedecinMapper medecinMapper) {
         this.medecinRepo = medecinRepo;
         this.medecinMapper = medecinMapper;
@@ -32,7 +37,11 @@ public class MedecinService {
         if(medecinRepo.existsByEmail(medecinRequestDTO.getEmail())){
             throw  new RuntimeException("already exists");
         }
+
         Medecin addMedecin=medecinMapper.toEntity(medecinRequestDTO);
+        addMedecin.setPassword(passwordEncoder.encode("samira12"));
+        addMedecin.setUsername(medecinRequestDTO.getNom());
+        addMedecin.setRole(Role.MEDECIN);
         medecinRepo.save(addMedecin);
         return medecinMapper.toDTO(addMedecin);
     }
@@ -59,6 +68,8 @@ public class MedecinService {
         Page<Medecin>medecins=medecinRepo.findAll(pageable);
         return medecins.map(medecinMapper::toDTO);
    }
+
+
    @Transactional
    @Cacheable(value = "MEDECIN_CACHE", key = "#nom + '-' + #page + '-' + #size")
    public Page<MedecinResponseDTO> searchDoctor(
