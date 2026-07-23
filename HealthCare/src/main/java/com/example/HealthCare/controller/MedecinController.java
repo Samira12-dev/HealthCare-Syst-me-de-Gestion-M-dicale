@@ -38,6 +38,7 @@ public class MedecinController {
     public void  deleteMedecin(@PathVariable Long id){
         medecinService.deleteMedecin(id);
     }
+
     @GetMapping
     public ResponseEntity<PageResponseDTO<MedecinResponseDTO>> getAllMedecin(
             @RequestParam(defaultValue = "0") int page,

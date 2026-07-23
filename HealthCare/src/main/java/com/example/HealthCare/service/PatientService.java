@@ -60,7 +60,7 @@ public class PatientService {
     }
 
     @Transactional
-    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size")
+//    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size")
     public PageResponseDTO<PatientResponseDTO> getAllPatient(int page,int size){
 
         Pageable pageable = PageRequest.of(page,size);

@@ -63,8 +63,7 @@ public class MedecinService {
     }
 
     @Transactional
-    @Cacheable(value = "MEDECIN_CACHE",
-            key = "#page + '-' + #size + '-' + #sortBy")
+//    @Cacheable(value = "MEDECIN_CACHE", key = "#page + '-' + #size + '-' + #sortBy")
     public PageResponseDTO<MedecinResponseDTO> getAllMedecin(
             int page,
             int size,

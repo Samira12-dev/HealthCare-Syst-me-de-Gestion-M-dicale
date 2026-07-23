@@ -78,8 +78,7 @@ public class DossierMedicalService {
         return  dossierMedicalMapper.toDto(dossier);
     }
     @Transactional
-    @Cacheable(value = "DOSSIER_CACHE",
-            key = "#page +'-'+ #size +'-' + #sortBy")
+//    @Cacheable(value = "DOSSIER_CACHE", key = "#page +'-'+ #size +'-' + #sortBy")
     public PageResponseDTO<DossierMedicalResponseDto> getAllDossier(
             int page,
             int size,

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/HealthCare/src/main/resources/db/migration/V__5__add_user_relation_to_patient_and_medecine.sql" dialect="MySQL" />
-  </component>
-</project>

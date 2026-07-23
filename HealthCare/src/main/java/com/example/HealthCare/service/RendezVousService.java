@@ -82,8 +82,7 @@ public class RendezVousService {
     }
 
     @Transactional
-    @Cacheable(value = "RENDEZ_VOUS_CACHE",
-            key = "#page + '-' + #size + '-' + #sortBy")
+//    @Cacheable(value = "RENDEZ_VOUS_CACHE", key = "#page + '-' + #size + '-' + #sortBy")
     public PageResponseDTO<RendezVousResponseDTO> getAllRendezVous(
             int page,
             int size,
