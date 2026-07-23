@@ -1,9 +1,6 @@
 package com.example.HealthCare.service;
 
-import com.example.HealthCare.dto.DossierMedicalRequestDto;
-import com.example.HealthCare.dto.DossierMedicalResponseDto;
-import com.example.HealthCare.dto.MedecinResponseDTO;
-import com.example.HealthCare.dto.RendezVousResponseDTO;
+import com.example.HealthCare.dto.*;
 import com.example.HealthCare.entity.DossierMedical;
 import com.example.HealthCare.entity.Patient;
 import com.example.HealthCare.entity.RendezVous;
@@ -81,14 +78,33 @@ public class DossierMedicalService {
         return  dossierMedicalMapper.toDto(dossier);
     }
     @Transactional
-    @Cacheable(value = "DOSSIER_CACHE",key = "#page +'-'+ #size +'-' + #sortBy")
-    public Page<DossierMedicalResponseDto> getAllDossier(int page, int size, String sortBy){
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
+    @Cacheable(value = "DOSSIER_CACHE",
+            key = "#page +'-'+ #size +'-' + #sortBy")
+    public PageResponseDTO<DossierMedicalResponseDto> getAllDossier(
+            int page,
+            int size,
+            String sortBy
+    ){
 
-        Page<DossierMedical> medicals=dossierMedicalRepo.findAll(pageable);
-        return  medicals.map(dossierMedicalMapper::toDto);
+        Pageable pageable =
+                PageRequest.of(page,size,Sort.by(sortBy).ascending());
+
+        Page<DossierMedical> medicals =
+                dossierMedicalRepo.findAll(pageable);
+
+
+        Page<DossierMedicalResponseDto> dtoPage =
+                medicals.map(dossierMedicalMapper::toDto);
+
+
+        return new PageResponseDTO<>(
+                dtoPage.getContent(),
+                dtoPage.getNumber(),
+                dtoPage.getSize(),
+                dtoPage.getTotalElements(),
+                dtoPage.getTotalPages()
+        );
     }
-
     @Transactional
     public String telechargePDF(Long patientId) throws FileNotFoundException, DocumentException {
         Patient  patient = patientRepo.findById(patientId).orElseThrow(()->new RuntimeException("Patient not found with this id "+ patientId));

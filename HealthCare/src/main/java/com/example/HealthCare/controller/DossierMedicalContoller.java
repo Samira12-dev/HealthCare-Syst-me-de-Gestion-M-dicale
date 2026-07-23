@@ -1,8 +1,6 @@
 package com.example.HealthCare.controller;
 
-import com.example.HealthCare.dto.DossierMedicalRequestDto;
-import com.example.HealthCare.dto.DossierMedicalResponseDto;
-import com.example.HealthCare.dto.RendezVousResponseDTO;
+import com.example.HealthCare.dto.*;
 import com.example.HealthCare.entity.DossierMedical;
 import com.example.HealthCare.service.DossierMedicalService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,10 +43,14 @@ public class DossierMedicalContoller {
         return dossierMedicalService.findDossierMedicalById(id);
     }
     @GetMapping
-    public Page<DossierMedicalResponseDto> getAllDossier(@RequestParam(defaultValue = "0")int page,
-                                                        @RequestParam(defaultValue = "5")int size,
-                                                        @RequestParam(defaultValue = "id")String sortBy) {
-        return dossierMedicalService.getAllDossier(page, size, sortBy);
+    public ResponseEntity<PageResponseDTO<DossierMedicalResponseDto>> getAllDossier(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy){
+
+        return ResponseEntity.ok(
+                dossierMedicalService.getAllDossier(page,size,sortBy)
+        );
     }
 
     @GetMapping("/{id}/pdf")

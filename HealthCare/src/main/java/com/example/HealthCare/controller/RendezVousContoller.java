@@ -1,5 +1,6 @@
 package com.example.HealthCare.controller;
 
+import com.example.HealthCare.dto.PageResponseDTO;
 import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.StatutRendezVous;
@@ -49,11 +50,14 @@ public class RendezVousContoller {
     }
 
     @GetMapping
-    @Operation(summary = "lister les rendez_vous")
-    public Page<RendezVousResponseDTO> getAllRendezVous(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "5") int size,
-                                                        @RequestParam(defaultValue = "dateRendezVous") String sortBy) {
-        return rendezVousService.getAllRendezVous(page, size, sortBy);
+    public ResponseEntity<PageResponseDTO<RendezVousResponseDTO>> getAllRendezVous(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "dateRendezVous") String sortBy){
+
+        return ResponseEntity.ok(
+                rendezVousService.getAllRendezVous(page,size,sortBy)
+        );
     }
 
     @GetMapping("/patient/{patientId}")

@@ -1,5 +1,6 @@
 package com.example.HealthCare.service;
 
+import com.example.HealthCare.dto.PageResponseDTO;
 import com.example.HealthCare.dto.PatientRequestDTO;
 import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.entity.Patient;
@@ -59,13 +60,21 @@ public class PatientService {
     }
 
     @Transactional
-    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size ")
-    public Page<PatientResponseDTO> getAllPatient(int page,int size){
-        Pageable pageable= PageRequest.of(page,size);
-        Page<Patient> patients= patientRepo.findAll(pageable);
-        return patients.map(patientMapper::toDto);
-    }
+    @Cacheable(value = "PATIENT_CACHE", key = "#page + '-' + #size")
+    public PageResponseDTO<PatientResponseDTO> getAllPatient(int page,int size){
 
+        Pageable pageable = PageRequest.of(page,size);
+
+        Page<Patient> patients = patientRepo.findAll(pageable);
+
+        return new PageResponseDTO<>(
+                patients.map(patientMapper::toDto).getContent(),
+                patients.getNumber(),
+                patients.getSize(),
+                patients.getTotalElements(),
+                patients.getTotalPages()
+        );
+    }
     @Transactional
     @Cacheable(value = "PATIENT_CACHE",key ="#id")
     public  PatientResponseDTO  getPatientById(Long id){

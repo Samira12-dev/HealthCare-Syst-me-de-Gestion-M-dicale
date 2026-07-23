@@ -1,5 +1,6 @@
 package com.example.HealthCare.service;
 
+import com.example.HealthCare.dto.PageResponseDTO;
 import com.example.HealthCare.dto.RendezVouRequestDTO;
 import com.example.HealthCare.dto.RendezVousResponseDTO;
 import com.example.HealthCare.entity.*;
@@ -81,13 +82,35 @@ public class RendezVousService {
     }
 
     @Transactional
-    @Cacheable(value = "RENDEZ_VOUS_CACHE", key = "#nom + '-' + #page + '-' + #size")
-    public Page<RendezVousResponseDTO> getAllRendezVous(int page, int size, String sortBy){
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy).ascending());
+    @Cacheable(value = "RENDEZ_VOUS_CACHE",
+            key = "#page + '-' + #size + '-' + #sortBy")
+    public PageResponseDTO<RendezVousResponseDTO> getAllRendezVous(
+            int page,
+            int size,
+            String sortBy
+    ){
 
-      Page<RendezVous> rendezVousList=rendezVousRepo.findAll(pageable);
-      return  rendezVousList.map(rendezVousMapper::toDto);
+        Pageable pageable =
+                PageRequest.of(page,size,Sort.by(sortBy).ascending());
+
+
+        Page<RendezVous> rendezVous =
+                rendezVousRepo.findAll(pageable);
+
+
+        Page<RendezVousResponseDTO> dtoPage =
+                rendezVous.map(rendezVousMapper::toDto);
+
+
+        return new PageResponseDTO<>(
+                dtoPage.getContent(),
+                dtoPage.getNumber(),
+                dtoPage.getSize(),
+                dtoPage.getTotalElements(),
+                dtoPage.getTotalPages()
+        );
     }
+
     @Transactional
     @Cacheable(value = "RENDEZVOUS_PATIENT_CACHE", key = "#patientId")
     public List<RendezVousResponseDTO> rechercheRendezVousPatient(Long patientId){

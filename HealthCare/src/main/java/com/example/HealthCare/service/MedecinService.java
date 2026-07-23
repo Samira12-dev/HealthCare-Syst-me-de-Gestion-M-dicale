@@ -2,6 +2,7 @@ package com.example.HealthCare.service;
 
 import com.example.HealthCare.dto.MedecinRequestDTO;
 import com.example.HealthCare.dto.MedecinResponseDTO;
+import com.example.HealthCare.dto.PageResponseDTO;
 import com.example.HealthCare.entity.Medecin;
 import com.example.HealthCare.entity.Role;
 import com.example.HealthCare.mapper.MedecinMapper;
@@ -62,12 +63,31 @@ public class MedecinService {
     }
 
     @Transactional
-    @Cacheable(value = "MEDECIN_CACHE",key = "#page + '-' + #size + '-' + #sortBy")
-   public Page<MedecinResponseDTO> getAllMedecin(int page, int size, String sortBy){
-        Pageable pageable= PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        Page<Medecin>medecins=medecinRepo.findAll(pageable);
-        return medecins.map(medecinMapper::toDTO);
-   }
+    @Cacheable(value = "MEDECIN_CACHE",
+            key = "#page + '-' + #size + '-' + #sortBy")
+    public PageResponseDTO<MedecinResponseDTO> getAllMedecin(
+            int page,
+            int size,
+            String sortBy
+    ){
+
+        Pageable pageable =
+                PageRequest.of(page,size,Sort.by(sortBy).ascending());
+
+        Page<Medecin> medecins = medecinRepo.findAll(pageable);
+
+        Page<MedecinResponseDTO> dtoPage =
+                medecins.map(medecinMapper::toDTO);
+
+
+        return new PageResponseDTO<>(
+                dtoPage.getContent(),
+                dtoPage.getNumber(),
+                dtoPage.getSize(),
+                dtoPage.getTotalElements(),
+                dtoPage.getTotalPages()
+        );
+    }
 
 
    @Transactional

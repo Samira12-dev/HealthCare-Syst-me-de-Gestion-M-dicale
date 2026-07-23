@@ -2,6 +2,7 @@ package com.example.HealthCare.controller;
 
 import com.example.HealthCare.dto.MedecinRequestDTO;
 import com.example.HealthCare.dto.MedecinResponseDTO;
+import com.example.HealthCare.dto.PageResponseDTO;
 import com.example.HealthCare.dto.PatientResponseDTO;
 import com.example.HealthCare.service.MedecinService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,18 +38,17 @@ public class MedecinController {
     public void  deleteMedecin(@PathVariable Long id){
         medecinService.deleteMedecin(id);
     }
-
     @GetMapping
-    @Operation(summary = "listerles medecins")
-    public ResponseEntity<Page<MedecinResponseDTO>>getAllMedecin(@RequestParam (defaultValue = "0")int page,
-                                                                 @RequestParam(defaultValue = "10")int size,
-                                                                 @RequestParam(defaultValue = "specialite")String sortBy){
+    public ResponseEntity<PageResponseDTO<MedecinResponseDTO>> getAllMedecin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "specialite") String sortBy){
 
-
-        Page<MedecinResponseDTO> responseDTOS= medecinService.getAllMedecin(page, size, sortBy);
-        return ResponseEntity.ok(responseDTOS);
-
+        return ResponseEntity.ok(
+                medecinService.getAllMedecin(page,size,sortBy)
+        );
     }
+
     @GetMapping("/search")
     @Operation(summary = "search by speciality")
     public  Page<MedecinResponseDTO>searchBySpeciality(@RequestParam String speciality,

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -32,35 +30,38 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        if (path.contains("/swagger-ui") ||
-                path.contains("/api-docs")||
-                path.contains("/v3/api-docs") ||
-                path.contains("/swagger-resources") ||
-                path.contains("/webjars")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
+        System.out.println("==================================");
+        System.out.println("URL = " + request.getRequestURI());
 
         final String authHeader = request.getHeader("Authorization");
+
+        System.out.println("HEADER = " + authHeader);
 
         String username = null;
         String jwt = null;
 
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+            System.out.println("No Bearer Token Found");
+
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
 
+        System.out.println("JWT = " + jwt);
+
         try {
+
             username = jwtUtils.extractUsername(jwt);
+
+            System.out.println("USERNAME = " + username);
+
         } catch (Exception e) {
-            logger.warn("JWT rejected: " + e.getMessage());
+
+            System.out.println("JWT ERROR = " + e.getMessage());
+
             filterChain.doFilter(request, response);
             return;
         }
@@ -71,7 +72,13 @@ public class JwtFilter extends OncePerRequestFilter {
             UserDetails userDetails =
                     customUserDetailsService.loadUserByUsername(username);
 
-            if (jwtUtils.validateToken(jwt, userDetails)) {
+            System.out.println("USER DETAILS = " + userDetails.getUsername());
+
+            boolean valid = jwtUtils.validateToken(jwt, userDetails);
+
+            System.out.println("TOKEN VALID = " + valid);
+
+            if (valid) {
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
@@ -85,6 +92,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                System.out.println("Authentication SUCCESS");
+            } else {
+
+                System.out.println("Authentication FAILED");
             }
         }
 
