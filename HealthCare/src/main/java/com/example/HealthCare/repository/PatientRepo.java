@@ -16,6 +16,4 @@ public interface PatientRepo extends JpaRepository<Patient,Long> {
 
    @EntityGraph(attributePaths = "listeRendezVous")
     Optional<Patient> findById(Long id);
-
-
 }

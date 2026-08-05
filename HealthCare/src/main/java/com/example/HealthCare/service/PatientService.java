@@ -85,14 +85,26 @@ public class PatientService {
     }
 
     @Transactional
-    @Cacheable(value = "PATIENT_CACHE", key = "#nom + '-' + #page + '-' + #size")
+   // @Cacheable(value = "PATIENT_CACHE", key = "#nom + '-' + #page + '-' + #size")
     public Page<Patient>searchPatient(String nom, int page, int size){
         Pageable pageable=PageRequest.of(page,size);
         return patientRepo.findByNomContaining(nom,pageable);
     }
 
+    @Transactional
+    @Cacheable(value = "PATIENT_CACHE", key = "#nom + '-' + #page + '-' + #size")
+    public Page<PatientResponseDTO> sortByNom(int size, int page, String sortBy) {
 
+        Sort sort;
+        if (sortBy.equalsIgnoreCase("desc")) {
+            sort = Sort.by("nom").descending();
+        } else {
+            sort = Sort.by("nom").ascending();
+        }
+        Pageable pageable = PageRequest.of(size, page, sort);
+        Page<Patient> patients = patientRepo.findAll(pageable);
+        return patients.map(patientMapper::toDto);
 
-
+    }
 }
 

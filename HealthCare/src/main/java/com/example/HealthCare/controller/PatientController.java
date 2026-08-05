@@ -68,4 +68,11 @@ public class PatientController {
         return ResponseEntity.ok(patientService.searchPatient(nom,page,size));
     }
 
+    @GetMapping("/sort")
+    public ResponseEntity<Page<PatientResponseDTO>> sortPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sortBy) {
+        return ResponseEntity.ok(patientService.sortByNom(page,size,sortBy));
+    }
 }
